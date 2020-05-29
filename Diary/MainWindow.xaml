@@ -4,9 +4,54 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Diary"
+        xmlns:vm="clr-namespace:Diary.ViewModel"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="{Binding Path=DisplayName}" Height="450" Width="800">
+    <Window.Resources>
+        <ResourceDictionary Source="Styles.xaml" />
+    </Window.Resources>
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
 
+        </Grid.ColumnDefinitions>
+
+        <Menu Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+            <MenuItem Header="File" Height="30">
+                <MenuItem Header="Count Static Information">
+                    <MenuItem Header="Static information for the all time"></MenuItem>
+                    <MenuItem Header="Static information for the last month"></MenuItem>
+                    <MenuItem Header="Static information for the last week"></MenuItem>
+                </MenuItem>
+                <MenuItem Header="Exit"/>
+            </MenuItem>
+        </Menu>
+
+        <Calendar Grid.Row="1" Grid.Column="1" x:Name="calendar1" Style="{StaticResource StyleCalendar}" FirstDayOfWeek="Monday" 
+                  SelectedDate="{Binding SelectedDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+        >
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="SelectedDatesChanged">
+                    <i:InvokeCommandAction
+                            Command="{Binding SelectDateCommand}"
+                            />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </Calendar>
+
+        <ListBox x:Name="ListNotes" ItemsSource="{Binding NoteViewModels}" Grid.Row="1" Grid.Column="0" VerticalAlignment="Top" Height="350"
+                 SelectedItem="{Binding SelectedNoteViewModel}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding GetString}"></TextBlock>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
     </Grid>
 </Window>
