@@ -5,11 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Diary"
         xmlns:vm="clr-namespace:Diary.ViewModel"
+        xmlns:vw="clr-namespace:Diary.View"
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         mc:Ignorable="d"
-        Title="{Binding Path=DisplayName}" Height="450" Width="800">
+        Title="Diary" Height="450" Width="800">
     <Window.Resources>
-        <ResourceDictionary Source="Styles.xaml" />
+        <ResourceDictionary Source="MainWindowResources.xaml" />
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -33,9 +34,21 @@
             </MenuItem>
         </Menu>
 
-        <Calendar Grid.Row="1" Grid.Column="1" x:Name="calendar1" Style="{StaticResource StyleCalendar}" FirstDayOfWeek="Monday" 
-                  SelectedDate="{Binding SelectedDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+        <Border
+            Grid.Column="0" 
+            Grid.Row="1"
+            DataContext="{Binding WorkspaceViewModel}"
         >
+            <ContentControl 
+                Content="{Binding Path=CurrentContentVM, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        </Border>
+
+        <Calendar
+            Grid.Row="1" 
+            Grid.Column="1" 
+            Style="{StaticResource StyleCalendar}"
+            FirstDayOfWeek="Monday" 
+            SelectedDate="{Binding SelectedDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="SelectedDatesChanged">
                     <i:InvokeCommandAction
@@ -45,13 +58,5 @@
             </i:Interaction.Triggers>
         </Calendar>
 
-        <ListBox x:Name="ListNotes" ItemsSource="{Binding NoteViewModels}" Grid.Row="1" Grid.Column="0" VerticalAlignment="Top" Height="350"
-                 SelectedItem="{Binding SelectedNoteViewModel}">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding GetString}"></TextBlock>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
     </Grid>
 </Window>

@@ -1,0 +1,43 @@
+﻿<UserControl x:Class="Diary.View.ListNotesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Diary.View"
+             xmlns:vm="clr-namespace:Diary.ViewModel"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             mc:Ignorable="d" 
+             d:DesignHeight="400" d:DesignWidth="400">
+    <Grid>
+        <ListBox x:Name="ListNotes" ItemsSource="{Binding NoteViewModels}" Grid.Row="1" Grid.Column="0" VerticalAlignment="Top" Height="400"
+                 SelectedItem="{Binding SelectedNoteViewModel}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding GetString}"></TextBlock>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="ContextMenu">
+                        <Setter.Value>
+                            <ContextMenu >
+                                <MenuItem Header="Изменить"
+                                          Command="{Binding Path=ChangeNoteCommand}"> 
+                                </MenuItem>
+                                <MenuItem Header="Удалить" Command="{Binding Path=DeleteNoteCommand}">
+                                </MenuItem>
+                            </ContextMenu>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ListBox.ItemContainerStyle>
+            <ListBox.ContextMenu>
+                <ContextMenu >
+                    <MenuItem Header="Создать новую запись" Command="{Binding Path=CreateNewNoteCommand }">
+                    </MenuItem>
+                </ContextMenu>
+            </ListBox.ContextMenu>
+        </ListBox>
+
+    </Grid>
+</UserControl>

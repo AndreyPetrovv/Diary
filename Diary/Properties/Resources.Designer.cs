@@ -104,5 +104,41 @@ namespace Diary.Properties {
                 return ResourceManager.GetString("MainWIndowDisplayName", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Not select progress.
+        /// </summary>
+        internal static string ProgressError {
+            get {
+                return ResourceManager.GetString("ProgressError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Not select relevance.
+        /// </summary>
+        internal static string RelevanceError {
+            get {
+                return ResourceManager.GetString("RelevanceError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Not currect time.
+        /// </summary>
+        internal static string TimeError {
+            get {
+                return ResourceManager.GetString("TimeError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Not select type job.
+        /// </summary>
+        internal static string TypeJobError {
+            get {
+                return ResourceManager.GetString("TypeJobError", resourceCulture);
+            }
+        }
     }
 }

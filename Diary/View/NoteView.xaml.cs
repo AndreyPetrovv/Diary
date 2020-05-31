@@ -14,11 +14,11 @@ using System.Windows.Shapes;
 namespace Diary.View
 {
     /// <summary>
-    /// Логика взаимодействия для CreateNewNote.xaml
+    /// Логика взаимодействия для NoteView.xaml
     /// </summary>
-    public partial class CreateNewNote : Page
+    public partial class NoteView : UserControl
     {
-        public CreateNewNote()
+        public NoteView()
         {
             InitializeComponent();
         }

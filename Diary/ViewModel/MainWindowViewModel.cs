@@ -13,19 +13,15 @@ using System.Runtime.CompilerServices;
 
 namespace Diary.ViewModel
 {
-    public class MainWindowViewModel: INotifyPropertyChanged
+    public class MainWindowViewModel: BaseViewModel
     {
         #region Fields
-        List<ICommand> _commands;
-
-        NoteViewModel selectedNoteViewModel;
 
         readonly NoteRepository noteRepository;
         readonly ProgressRepository progressRepository;
         readonly RelevanceRepository relevanceRepository;
         readonly TypeJobRepository typeJobRepository;
 
-        public event PropertyChangedEventHandler PropertyChanged;
         #endregion // Fields
 
         #region Constructor
@@ -37,27 +33,73 @@ namespace Diary.ViewModel
             relevanceRepository = new RelevanceRepository(connectionString);
             typeJobRepository = new TypeJobRepository(connectionString);
 
-            NoteViewModels = new ObservableCollection<NoteViewModel>();
         }
 
         #endregion // Constructor
 
         #region Properties
 
-        public ObservableCollection<NoteViewModel> NoteViewModels { get; set; }
-
-        public NoteViewModel SelectedNoteViewModel
+        private WorkspaceViewModel workspaceViewModel;
+        public WorkspaceViewModel WorkspaceViewModel
         {
             get
             {
-                return selectedNoteViewModel;
+                if(workspaceViewModel == null)
+                {
+                    workspaceViewModel = new WorkspaceViewModel();
+                    workspaceViewModel.CurrentContentVM = new NotesOfDayViewModel(noteRepository, 
+                                                                                relevanceRepository,
+                                                                                progressRepository, 
+                                                                                typeJobRepository, 
+                                                                                DateTime.Now);
+                }
+
+                return workspaceViewModel;
             }
             set
             {
-                selectedNoteViewModel = value;
-                OnPropertyChanged("SelectedNoteViewModel ");
+                workspaceViewModel = value;
+                OnPropertyChanged("WorksapceViewModel");
             }
         }
+
+
+        #endregion // Properties
+
+
+        #region Public functions
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public void OnPropertyChanged([CallerMemberName]string prop = "")
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(prop));
+        }
+        
+        #endregion // Public functions
+
+        #region Private functions
+
+        private void UpdateWorkspaceViewModel(BaseViewModel workspace)
+        {
+            workspaceViewModel.CurrentContentVM = workspace;
+        }
+
+        private void ChangeWorkspaceOnNoteView(Note note)
+        {
+            BaseViewModel workspace = new NoteViewModel(note, noteRepository, typeJobRepository, progressRepository, relevanceRepository);
+            UpdateWorkspaceViewModel(workspace);
+        }
+        private void ChangeWorkspaceOnListNotesView()
+        {
+            NotesOfDayViewModel workspace = new NotesOfDayViewModel(noteRepository, relevanceRepository,progressRepository,typeJobRepository, SelectedDate);
+            workspace.CreateNewNoteCommand = this.CreateNewNoteCommand;
+            UpdateWorkspaceViewModel(workspace);
+        }
+
+        #endregion // Private functions
+
+        #region Commands
 
         public DateTime SelectedDate { get; set; }
         private RelayCommand selectDateCommand;
@@ -68,64 +110,36 @@ namespace Diary.ViewModel
                 return selectDateCommand ??
                     (selectDateCommand = new RelayCommand(obj =>
                     {
-                        NoteViewModels.Clear();
-
-                        foreach (var note in noteRepository.GetNotes())
-                        {
-                            if (note.NoteData.Date == SelectedDate.Date)
-                            {
-                                NoteViewModels.Add(
-                                    new NoteViewModel(
-                                        note: note,
-                                        progresses: progressRepository.GetProgresses(),
-                                        relevances: relevanceRepository.GetRelevances(),
-                                        typeJobs: typeJobRepository.GetTypeJobs()
-                                        ));
-                            }
-                        }
+                        this.ChangeWorkspaceOnListNotesView();
                     }));
             }
         }
 
 
-        #endregion // Properties
-
-
-        #region Public functions
-
-        #endregion // Public functions
-
-        #region Private functions
-        public void OnPropertyChanged([CallerMemberName]string prop = "")
-        {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(prop));
-        }
-        #endregion // Private functions
-
-        #region Commands
-        public List<ICommand> Commands
+        private RelayCommand changeNoteCommand;
+        public RelayCommand ChangeNoteCommand
         {
             get
             {
-                if (_commands == null)
-                {
-                    List<ICommand> cmds = this.CreateCommands();
-                    _commands = new List<ICommand>(cmds);
-                }
-                return _commands;
+                return changeNoteCommand ??
+                    (changeNoteCommand = new RelayCommand(obj =>
+                    {
+                        this.ChangeWorkspaceOnNoteView((Note)obj);
+                    }));
             }
         }
-
-        List<ICommand> CreateCommands()
+        private RelayCommand createNewNoteCommand;
+        public RelayCommand CreateNewNoteCommand
         {
-            return new List<ICommand>
+            get
             {
-                new CommandCreate(),
-            };
+                return createNewNoteCommand ??
+                    (createNewNoteCommand = new RelayCommand(obj =>
+                    {
+                        this.ChangeWorkspaceOnNoteView(new Note());
+                    }));
+            }
         }
-
-      
         #endregion // Commands
     }
 }

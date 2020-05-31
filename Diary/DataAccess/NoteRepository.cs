@@ -26,6 +26,15 @@ namespace Diary.DataAccess
 
         #endregion // Constructor
 
+        public void AddNote(Note note)
+        {
+            _notes.Add(note);
+        }
+        public void RemoveNote(Note note)
+        {
+            _notes.Remove(note);
+        }
+
         public List<Note> GetNotes()
         {
             return new List<Note>(_notes);
