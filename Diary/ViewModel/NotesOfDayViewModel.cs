@@ -50,10 +50,6 @@ namespace Diary.ViewModel
 
         #endregion // Properties
 
-        #region Public methods
-
-        #endregion
-
         #region Private methods
 
         void UpdateNoteViewModels()
@@ -66,13 +62,9 @@ namespace Diary.ViewModel
                 {
                     NoteViewModel _noteVM = new NoteViewModel(
                             note: note,
-                            noteRepository: mainWindowViewModel.NoteRepository,
-                            progresses: mainWindowViewModel.ProgressRepository,
-                            relevances: mainWindowViewModel.RelevanceRepository,
-                            typeJobs: mainWindowViewModel.TypeJobRepository
+                            mainWindowViewModel: mainWindowViewModel
                             );
-                    _noteVM.ChangeNoteCommand = mainWindowViewModel.ChangeNoteCommand;
-                    _noteVM.UpdateWorckspaceCommand = mainWindowViewModel.UpdateWorckspaceCommand;
+
                     NoteViewModels.Add(_noteVM);
                         
                 }

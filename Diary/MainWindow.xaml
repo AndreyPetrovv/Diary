@@ -25,6 +25,7 @@
 
         <Menu Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
             <MenuItem Header="File" Height="30">
+                <MenuItem Header="Generate Data" Command="{Binding GenerateDataCommand}"/>
                 <MenuItem Header="Count Static Information">
                     <MenuItem Header="Static information for the all time"></MenuItem>
                     <MenuItem Header="Static information for the last month"></MenuItem>

@@ -1,18 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Diary.DataAccess;
-using System.Collections.ObjectModel;
-using Diary.Properties;
+using Diary.DataGeneration;
 using Diary.Model;
-using System.Windows.Controls;
-using System.Windows.Interactivity;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace Diary.ViewModel
 {
-    public class MainWindowViewModel: INotifyPropertyChanged
+    public class MainWindowViewModel: BaseViewModel
     {
         #region Fields
         DateTime selectedDate;
@@ -23,12 +18,6 @@ namespace Diary.ViewModel
         readonly TypeJobRepository typeJobRepository;
 
         WorkspaceViewModel workspaceViewModel;
-
-        RelayCommand changeNoteCommand;
-        RelayCommand selectDateCommand;
-        RelayCommand createNewNoteCommand;
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         #endregion // Fields
 
@@ -99,18 +88,6 @@ namespace Diary.ViewModel
 
         #endregion // Properties
 
-        #region Public functions
-
-        public void OnPropertyChanged([CallerMemberName]string prop = "")
-        {
-            if (PropertyChanged != null) 
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(prop));
-            }
-        }
-        
-        #endregion // Public functions
-
         #region Private functions
 
         void UpdateWorkspaceViewModel(BaseViewModel workspace)
@@ -122,8 +99,7 @@ namespace Diary.ViewModel
         {
             Note note = new Note();
             note.NoteDate = DateTime.Now;
-            NoteViewModel workspace = new NoteViewModel(note, noteRepository, typeJobRepository, progressRepository, relevanceRepository);
-            workspace.UpdateWorckspaceCommand = UpdateWorckspaceCommand;
+            NoteViewModel workspace = new NoteViewModel(note, this);
             UpdateWorkspaceViewModel(workspace);
         }
 
@@ -147,46 +123,51 @@ namespace Diary.ViewModel
         {
             get
             {
-                return selectDateCommand ??
-                    (selectDateCommand = new RelayCommand(obj =>
-                    {
-                        this.SetListNotesViewOnWorkspace();
-                    }));
+                return new RelayCommand(
+                    obj =>{
+                            this.SetListNotesViewOnWorkspace();
+                        });
             }
         }
         public RelayCommand CreateNewNoteCommand
         {
             get
             {
-
-                return createNewNoteCommand ??
-                    (createNewNoteCommand = new RelayCommand(
+                return new RelayCommand(
                         param => {
                             this.CreateNewNote();
                         },
-                        param => this.CheckTimeNote));
+                        param => this.CheckTimeNote
+                        );
             }
         }
         public RelayCommand ChangeNoteCommand
         {
             get
             {
-                return changeNoteCommand ??
-                    (changeNoteCommand = new RelayCommand(
+                return new RelayCommand(
                         param => this.ChangeNote(),
                         param => this.CheckTimeNote
-                    ));
+                        );
             }
         }
-        RelayCommand updateWorckspaceCommand;
         public RelayCommand UpdateWorckspaceCommand
         {
             get
             {
-                return updateWorckspaceCommand ??
-                    (updateWorckspaceCommand = new RelayCommand(
+                return new RelayCommand(
                         param => this.SetListNotesViewOnWorkspace()
-                    ));
+                    );
+            }
+        }
+
+        public RelayCommand GenerateDataCommand
+        {
+            get
+            {
+                return new RelayCommand(
+                        param => new DataGenerator().GenerateNotes(noteRepository)
+                    );
             }
         }
         #endregion // Commands

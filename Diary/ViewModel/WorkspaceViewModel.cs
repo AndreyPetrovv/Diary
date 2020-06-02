@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Diary.ViewModel
 {
-    public class WorkspaceViewModel: INotifyPropertyChanged
+    public class WorkspaceViewModel: BaseViewModel
     {
 
         object currentContentVM;
@@ -21,15 +21,6 @@ namespace Diary.ViewModel
                 currentContentVM = value;
 
                 OnPropertyChanged("CurrentContentVM");
-            }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        public void OnPropertyChanged([CallerMemberName]string prop = "")
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(prop));
             }
         }
 

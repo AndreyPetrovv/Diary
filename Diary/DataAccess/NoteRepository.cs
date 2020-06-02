@@ -61,6 +61,12 @@ namespace Diary.DataAccess
 
             DumpData(query);
         }
+        public void RemoveNotes(DateTime date)
+        {
+            string query = $"DELETE from dbo.Note WHERE Note_date='{date.ToShortDateString()}'";
+
+            DumpData(query);
+        }
 
         void CheckConnect(string connectionString)
         {
