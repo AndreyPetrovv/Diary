@@ -18,14 +18,8 @@ namespace Diary.Model
 
         #region State Properties
 
-        /// <summary>
-        /// 
-        /// </summary>
         public int IdTypeJob { get; set; }
 
-        /// <summary>
-        /// 
-        /// </summary>
         public string NameTypeJob { get; set; }
 
         #endregion // State Properties

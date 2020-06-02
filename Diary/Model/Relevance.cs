@@ -18,14 +18,9 @@ namespace Diary.Model
 
         #region State Properties
 
-        /// <summary>
-        /// 
-        /// </summary>
         public int IdRelevance { get; set; }
 
-        /// <summary>
-        /// 
-        /// </summary>
+
         public string LevelRelevance { get; set; }
 
         #endregion // State Properties

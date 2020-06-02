@@ -81,6 +81,8 @@
             </Grid>
         
         </StackPanel>
-        <Button Command="{Binding SaveCommand}" VerticalAlignment="Bottom" HorizontalAlignment="Right" Height="20" Width="80">Save</Button>
+        <Button Command="{Binding SaveCommand}" VerticalAlignment="Bottom" HorizontalAlignment="Right" Height="20" Width="80" Content="Save">
+
+        </Button>
     </Grid>
 </UserControl>

@@ -18,14 +18,8 @@ namespace Diary.Model
 
         #region State Properties
 
-        /// <summary>
-        /// 
-        /// </summary>
         public int IdProgress { get; set; }
 
-        /// <summary>
-        /// 
-        /// </summary>
         public string StatusProgress { get; set; }
 
         #endregion // State Properties

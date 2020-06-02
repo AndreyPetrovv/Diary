@@ -8,7 +8,7 @@ using System.ComponentModel;
 
 namespace Diary.ViewModel
 {
-    public class NoteViewModel: BaseViewModel, IDataErrorInfo
+    public class NoteViewModel: BaseViewModel
     {
 
         #region Fields
@@ -19,11 +19,18 @@ namespace Diary.ViewModel
         ProgressRepository _progresses;
         RelevanceRepository _relevances;
 
+        string timeStartHours;
+        string timeStartMinutes;
+        string timeFinishHours;
+        string timeFinishMinutes;
+
         string[] _noteTypeJobs;
         string[] _noteRelevances;
         string[] _noteProgresses;
 
-        RelayCommand _saveCommand;
+        
+        RelayCommand _saveNoteCommand;
+        RelayCommand _deleteNoteCommand;
 
         #endregion // Fields
 
@@ -47,19 +54,12 @@ namespace Diary.ViewModel
             TimeFinishHours = note.TimeFinish.Hours.ToString();
             TimeFinishMinutes = note.TimeFinish.Minutes.ToString();
 
-            _note.NoteData = DateTime.Now;
         }
 
         #endregion // Constructor
 
         #region State Properties
 
-        public string NoteData {
-            get
-            {
-                return this._note.NoteData.ToShortDateString();
-            }
-        }
         public string TypeJob {
             get
             {
@@ -108,7 +108,8 @@ namespace Diary.ViewModel
                 }
             } 
         }
-        private string timeStartHours;
+        
+
         public string TimeStartHours {
             get
             {
@@ -126,7 +127,6 @@ namespace Diary.ViewModel
                 }
             }
         }
-        private string timeStartMinutes;
         public string TimeStartMinutes
         {
             get
@@ -145,7 +145,6 @@ namespace Diary.ViewModel
                 }
             }
         }
-        private string timeFinishHours;
         public string TimeFinishHours
         {
             get
@@ -164,7 +163,6 @@ namespace Diary.ViewModel
                 }
             }
         }
-        private string timeFinishMinutes;
         public string TimeFinishMinutes
         {
             get
@@ -184,7 +182,7 @@ namespace Diary.ViewModel
             }
         }
 
-        public string GetString => $"{NoteData}, Занятие: {TypeJob};\n" +
+        public string GetString => $"{_note.NoteDate.Date}, Занятие: {TypeJob};\n" +
             $"Важность: {Relevance} Прогресс: {Progress}\n" +
             $"Start: {_note.TimeStart.Hours}:{_note.TimeStart.Minutes} " +
             $"Finish: {_note.TimeFinish.Hours}:{_note.TimeFinish.Minutes}";
@@ -255,30 +253,31 @@ namespace Diary.ViewModel
 
         #endregion // Presentation Properties
 
-        #region Public methods
+        #region Private methods
 
-        public void Save()
+        void Save()
         {
-            _noteRepository.AddNote(_note);
-
-            base.OnPropertyChanged("DisplayName");
+            if (_note.IdNote == -1)
+            {
+                _noteRepository.AddNote(_note);
+            }
+            else
+            {
+                _noteRepository.UpdateNote(_note);
+            }
         }
 
-        public void Delete()
+        void Delete()
         {
             _noteRepository.RemoveNote(_note);
 
-            base.OnPropertyChanged("DisplayName");
+            base.OnPropertyChanged("CurrentContentVM");
         }
-
-        #endregion
-
-        #region Private methods
 
         bool CheckValidTimeH(string time)
         {
             int testTime;
-            if (CheckTimeData(time) && int.TryParse(time, out testTime))
+            if (time.Length >= 0 && time.Length <= 2 && int.TryParse(time, out testTime))
             {
                 if (testTime >= 0 && testTime <= 24)
                 {
@@ -291,7 +290,7 @@ namespace Diary.ViewModel
         bool CheckValidTimeM(string time)
         {
             int testTime;
-            if (CheckTimeData(time) && int.TryParse(time, out testTime))
+            if (time.Length >= 0 && time.Length <= 2 && int.TryParse(time, out testTime))
             {
                 if (testTime >= 0 && testTime <= 59)
                 {
@@ -299,14 +298,6 @@ namespace Diary.ViewModel
                 }
             }
 
-            return false;
-        }
-        bool CheckTimeData(string time)
-        {
-            if (time.Length >= 0 && time.Length <= 2)
-            {
-                return true;
-            }
             return false;
         }
 
@@ -322,7 +313,6 @@ namespace Diary.ViewModel
 
             return "None";
         }
-
         string GetRelevance(Note note, RelevanceRepository relevances)
         {
             foreach (var item in relevances.GetRelevances())
@@ -335,7 +325,6 @@ namespace Diary.ViewModel
 
             return "None";
         }
-
         string GetProgress(Note note, ProgressRepository progresses)
         {
             foreach (var item in progresses.GetProgresses())
@@ -354,86 +343,44 @@ namespace Diary.ViewModel
             get { return _note.IsValid; }
         }
 
-        string IDataErrorInfo.Error
-        {
-            get { return (_note as IDataErrorInfo).Error; }
-        }
-
-        string IDataErrorInfo.this[string propertyName]
-        {
-            get
-            {
-                string error = null;
-                switch (propertyName)
-                {
-                    case "TypeJob":
-                        if (!_note.ValidateTypeJob())
-                        {
-                            error = Properties.Resources.TypeJobError;
-                        }
-                        break;
-                    case "Relevance":
-                        if (!_note.ValidateRelevance())
-                        {
-                            error = Properties.Resources.RelevanceError;
-                        }
-                        break;
-                    case "Progress":
-                        if (!_note.ValidateProgress())
-                        {
-                            error = Properties.Resources.ProgressError;
-                        }
-                        break;
-                }
-
-                return error;
-            }
-        }
-
-        #endregion
+        #endregion // Private methods
 
         #region Commands
-        public ICommand SaveCommand
+        public RelayCommand ChangeNoteCommand { get; set; }
+        public RelayCommand UpdateWorckspaceCommand { get; set; }
+
+        public RelayCommand SaveCommand
         {
             get
             {
-                if (_saveCommand == null)
+                if (_saveNoteCommand == null)
                 {
-                    _saveCommand = new RelayCommand(
-                        param => this.Save(),
+                    _saveNoteCommand = new RelayCommand(
+                        param => {
+                            this.Save();
+                            this.UpdateWorckspaceCommand.Execute(null);
+                            }
+                        ,
                         param => this.CanSave
                         );
                 }
-                return _saveCommand;
+                return _saveNoteCommand;
             }
         }
 
-        private RelayCommand changeNoteCommand;
-        public RelayCommand ChangeNoteCommand
+        public RelayCommand DeleteNoteCommand 
         {
-            get
+            get 
             {
-                return changeNoteCommand;
-            }
-            set
-            {
-                changeNoteCommand = value;
-            }
-        }
-
-        private RelayCommand deleteNoteCommand;
-        public RelayCommand DeleteNoteCommand
-        {
-            get
-            {
-                return deleteNoteCommand;
-            }
-            set
-            {
-                deleteNoteCommand = value;
+                if (_deleteNoteCommand == null)
+                {
+                    _deleteNoteCommand = new RelayCommand(
+                        param => this.Delete()
+                        );
+                }
+                return _deleteNoteCommand;
             }
         }
-
 
         #endregion // Commands
 

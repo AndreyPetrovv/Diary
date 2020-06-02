@@ -10,7 +10,7 @@ namespace Diary
         #region Fields
 
         readonly Action<object> execute;
-        readonly Func<object, bool> canExecute;
+        readonly Predicate<object> canExecute;
 
         #endregion // Fields
 
@@ -20,7 +20,7 @@ namespace Diary
             remove { CommandManager.RequerySuggested -= value; }
         }
 
-        public RelayCommand(Action<object> execute, Func<object, bool> canExecute = null)
+        public RelayCommand(Action<object> execute, Predicate<object> canExecute = null)
         {
             this.execute = execute;
             this.canExecute = canExecute;

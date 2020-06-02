@@ -8,7 +8,7 @@
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              mc:Ignorable="d" 
              d:DesignHeight="400" d:DesignWidth="400">
-    <Grid>
+    <Grid >
         <ListBox x:Name="ListNotes" ItemsSource="{Binding NoteViewModels}" Grid.Row="1" Grid.Column="0" VerticalAlignment="Top" Height="400"
                  SelectedItem="{Binding SelectedNoteViewModel}">
             <ListBox.ItemTemplate>
@@ -31,9 +31,9 @@
                     </Setter>
                 </Style>
             </ListBox.ItemContainerStyle>
-            <ListBox.ContextMenu>
+            <ListBox.ContextMenu >
                 <ContextMenu >
-                    <MenuItem Header="Создать новую запись" Command="{Binding Path=CreateNewNoteCommand }">
+                    <MenuItem Header="Создать новую запись" Command="{Binding Path=CreateNewNoteCommand}">
                     </MenuItem>
                 </ContextMenu>
             </ListBox.ContextMenu>

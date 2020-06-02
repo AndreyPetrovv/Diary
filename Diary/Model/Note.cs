@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace Diary.Model
 {
-    public class Note: IDataErrorInfo
+    public class Note
     {
 
         #region Fields
@@ -54,9 +54,9 @@ namespace Diary.Model
 
         #region State Properties
 
-        public int IdNote { get => idNote; set => idNote = value; }
+        public int IdNote { get => idNote; private set => idNote = value; }
 
-        public DateTime NoteData { get => noteData; set => noteData = value; }
+        public DateTime NoteDate { get => noteData; set => noteData = value; }
 
         public int IdTypeJob { get => idTypeJob; set => idTypeJob = value; }
 
@@ -81,40 +81,6 @@ namespace Diary.Model
 
                 return false;
             }
-        }
-        string IDataErrorInfo.Error { get { return null; } }
-
-        string IDataErrorInfo.this[string propertyName]
-        {
-            get { return this.GetValidError(propertyName); }
-        }
-
-        string GetValidError(string propertyName)
-        {
-            string error = null;
-            switch (propertyName)
-            {
-                case "TypeJob":
-                    if (!ValidateTypeJob())
-                    {
-                        error = Properties.Resources.TypeJobError;
-                    }
-                    break;
-                case "Relevance":
-                    if (!ValidateRelevance())
-                    {
-                        error = Properties.Resources.RelevanceError;
-                    }
-                    break;
-                case "Progress":
-                    if (!ValidateProgress())
-                    {
-                        error = Properties.Resources.ProgressError;
-                    }
-                    break;
-            }
-
-            return error;
         }
 
         public bool ValidateTypeJob()

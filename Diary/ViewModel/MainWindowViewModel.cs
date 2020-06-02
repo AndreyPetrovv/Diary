@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 using Diary.DataAccess;
-using Diary.Commands;
 using System.Collections.ObjectModel;
 using Diary.Properties;
 using Diary.Model;
@@ -13,14 +12,23 @@ using System.Runtime.CompilerServices;
 
 namespace Diary.ViewModel
 {
-    public class MainWindowViewModel: BaseViewModel
+    public class MainWindowViewModel: INotifyPropertyChanged
     {
         #region Fields
+        DateTime selectedDate;
 
         readonly NoteRepository noteRepository;
         readonly ProgressRepository progressRepository;
         readonly RelevanceRepository relevanceRepository;
         readonly TypeJobRepository typeJobRepository;
+
+        WorkspaceViewModel workspaceViewModel;
+
+        RelayCommand changeNoteCommand;
+        RelayCommand selectDateCommand;
+        RelayCommand createNewNoteCommand;
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         #endregion // Fields
 
@@ -32,14 +40,16 @@ namespace Diary.ViewModel
             progressRepository = new ProgressRepository(connectionString);
             relevanceRepository = new RelevanceRepository(connectionString);
             typeJobRepository = new TypeJobRepository(connectionString);
-
         }
 
         #endregion // Constructor
 
         #region Properties
+        public NoteRepository NoteRepository { get => noteRepository; }
+        public ProgressRepository ProgressRepository { get => progressRepository; }
+        public TypeJobRepository TypeJobRepository { get => typeJobRepository; }
+        public RelevanceRepository RelevanceRepository { get => relevanceRepository; }
 
-        private WorkspaceViewModel workspaceViewModel;
         public WorkspaceViewModel WorkspaceViewModel
         {
             get
@@ -47,11 +57,7 @@ namespace Diary.ViewModel
                 if(workspaceViewModel == null)
                 {
                     workspaceViewModel = new WorkspaceViewModel();
-                    workspaceViewModel.CurrentContentVM = new NotesOfDayViewModel(noteRepository, 
-                                                                                relevanceRepository,
-                                                                                progressRepository, 
-                                                                                typeJobRepository, 
-                                                                                DateTime.Now);
+                    workspaceViewModel.CurrentContentVM = new NotesOfDayViewModel(this);
                 }
 
                 return workspaceViewModel;
@@ -63,37 +69,73 @@ namespace Diary.ViewModel
             }
         }
 
+        bool CheckTimeNote
+        {
+            get
+            {
+                if (SelectedDate.Date == DateTime.Now.Date)
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
+
+        public DateTime SelectedDate {
+            get
+            {
+                if(selectedDate == new DateTime())
+                {
+                    selectedDate = DateTime.Now;
+                }
+
+                return selectedDate;
+            }
+            set
+            {
+                selectedDate = value;
+            }
+        }
 
         #endregion // Properties
 
-
         #region Public functions
-        public event PropertyChangedEventHandler PropertyChanged;
 
         public void OnPropertyChanged([CallerMemberName]string prop = "")
         {
-            if (PropertyChanged != null)
+            if (PropertyChanged != null) 
+            {
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
+            }
         }
         
         #endregion // Public functions
 
         #region Private functions
 
-        private void UpdateWorkspaceViewModel(BaseViewModel workspace)
+        void UpdateWorkspaceViewModel(BaseViewModel workspace)
         {
             workspaceViewModel.CurrentContentVM = workspace;
         }
 
-        private void ChangeWorkspaceOnNoteView(Note note)
+        void CreateNewNote()
         {
-            BaseViewModel workspace = new NoteViewModel(note, noteRepository, typeJobRepository, progressRepository, relevanceRepository);
+            Note note = new Note();
+            note.NoteDate = DateTime.Now;
+            NoteViewModel workspace = new NoteViewModel(note, noteRepository, typeJobRepository, progressRepository, relevanceRepository);
+            workspace.UpdateWorckspaceCommand = UpdateWorckspaceCommand;
             UpdateWorkspaceViewModel(workspace);
         }
-        private void ChangeWorkspaceOnListNotesView()
+
+        void ChangeNote()
         {
-            NotesOfDayViewModel workspace = new NotesOfDayViewModel(noteRepository, relevanceRepository,progressRepository,typeJobRepository, SelectedDate);
-            workspace.CreateNewNoteCommand = this.CreateNewNoteCommand;
+            BaseViewModel workspace = (workspaceViewModel.CurrentContentVM as NotesOfDayViewModel).SelectedNoteViewModel;
+            UpdateWorkspaceViewModel(workspace);
+        }
+
+        void SetListNotesViewOnWorkspace()
+        {
+            NotesOfDayViewModel workspace = new NotesOfDayViewModel(this);
             UpdateWorkspaceViewModel(workspace);
         }
 
@@ -101,8 +143,6 @@ namespace Diary.ViewModel
 
         #region Commands
 
-        public DateTime SelectedDate { get; set; }
-        private RelayCommand selectDateCommand;
         public RelayCommand SelectDateCommand
         {
             get
@@ -110,34 +150,43 @@ namespace Diary.ViewModel
                 return selectDateCommand ??
                     (selectDateCommand = new RelayCommand(obj =>
                     {
-                        this.ChangeWorkspaceOnListNotesView();
+                        this.SetListNotesViewOnWorkspace();
                     }));
             }
         }
+        public RelayCommand CreateNewNoteCommand
+        {
+            get
+            {
 
-
-        private RelayCommand changeNoteCommand;
+                return createNewNoteCommand ??
+                    (createNewNoteCommand = new RelayCommand(
+                        param => {
+                            this.CreateNewNote();
+                        },
+                        param => this.CheckTimeNote));
+            }
+        }
         public RelayCommand ChangeNoteCommand
         {
             get
             {
                 return changeNoteCommand ??
-                    (changeNoteCommand = new RelayCommand(obj =>
-                    {
-                        this.ChangeWorkspaceOnNoteView((Note)obj);
-                    }));
+                    (changeNoteCommand = new RelayCommand(
+                        param => this.ChangeNote(),
+                        param => this.CheckTimeNote
+                    ));
             }
         }
-        private RelayCommand createNewNoteCommand;
-        public RelayCommand CreateNewNoteCommand
+        RelayCommand updateWorckspaceCommand;
+        public RelayCommand UpdateWorckspaceCommand
         {
             get
             {
-                return createNewNoteCommand ??
-                    (createNewNoteCommand = new RelayCommand(obj =>
-                    {
-                        this.ChangeWorkspaceOnNoteView(new Note());
-                    }));
+                return updateWorckspaceCommand ??
+                    (updateWorckspaceCommand = new RelayCommand(
+                        param => this.SetListNotesViewOnWorkspace()
+                    ));
             }
         }
         #endregion // Commands

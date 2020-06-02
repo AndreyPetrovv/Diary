@@ -14,26 +14,21 @@ namespace Diary.ViewModel
 
         NoteViewModel selectedNoteViewModel;
 
+        MainWindowViewModel mainWindowViewModel;
+
         #endregion // Fields
 
         #region Constructor
         
-        public NotesOfDayViewModel(
-            NoteRepository noteRepository,
-            RelevanceRepository relevanceRepository,
-            ProgressRepository progressRepository,
-            TypeJobRepository typeJobRepository,
-            DateTime SelectedDate)
+        public NotesOfDayViewModel(MainWindowViewModel mainWindowViewModel)
         {
+
+            this.mainWindowViewModel = mainWindowViewModel;
 
             NoteViewModels = new ObservableCollection<NoteViewModel>();
 
-            UpdateNoteViewModels(
-                noteRepository,
-                relevanceRepository,
-                progressRepository,
-                typeJobRepository,
-                SelectedDate);
+            UpdateNoteViewModels();
+
         }
 
         #endregion // Constructor
@@ -61,49 +56,38 @@ namespace Diary.ViewModel
 
         #region Private methods
 
-        void UpdateNoteViewModels(
-            NoteRepository noteRepository,
-            RelevanceRepository relevanceRepository,
-            ProgressRepository progressRepository,
-            TypeJobRepository typeJobRepository,
-            DateTime SelectedDate)
+        void UpdateNoteViewModels()
         {
             NoteViewModels.Clear();
 
-            foreach (var note in noteRepository.GetNotes())
+            foreach (var note in mainWindowViewModel.NoteRepository.GetNotesOfDay(mainWindowViewModel.SelectedDate))
             {
-                if (note.NoteData.Date == SelectedDate.Date)
+                if (note.NoteDate.Date == mainWindowViewModel.SelectedDate.Date)
                 {
                     NoteViewModel _noteVM = new NoteViewModel(
                             note: note,
-                            noteRepository: noteRepository,
-                            progresses: progressRepository,
-                            relevances: relevanceRepository,
-                            typeJobs: typeJobRepository
+                            noteRepository: mainWindowViewModel.NoteRepository,
+                            progresses: mainWindowViewModel.ProgressRepository,
+                            relevances: mainWindowViewModel.RelevanceRepository,
+                            typeJobs: mainWindowViewModel.TypeJobRepository
                             );
-                    _noteVM.ChangeNoteCommand = null;
-
+                    _noteVM.ChangeNoteCommand = mainWindowViewModel.ChangeNoteCommand;
+                    _noteVM.UpdateWorckspaceCommand = mainWindowViewModel.UpdateWorckspaceCommand;
                     NoteViewModels.Add(_noteVM);
                         
                 }
             }
         }
 
-
         #endregion
 
         #region Commands
 
-        private RelayCommand createNewNoteCommand;
         public RelayCommand CreateNewNoteCommand
         {
             get
             {
-                return createNewNoteCommand;
-            }
-            set
-            {
-                createNewNoteCommand = value;
+                return mainWindowViewModel.CreateNewNoteCommand;
             }
         }
 
