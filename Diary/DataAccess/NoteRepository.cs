@@ -26,11 +26,14 @@ namespace Diary.DataAccess
 
         #endregion // Constructor
 
+        #region Public methods
+
         public List<Note> GetNotesOfDay(DateTime date)
         {
             string query = $"SELECT *  from dbo.Note WHERE Note_date='{date.Date.ToShortDateString()}'";
             return LoadData(query);
         }
+
         public List<Note> GetAllNotes()
         {
             string query = $"SELECT *  from dbo.Note";
@@ -45,6 +48,7 @@ namespace Diary.DataAccess
 
             DumpData(query, note);
         }
+
         public void UpdateNote(Note note)
         {
             string query = $"Update dbo.Note " +
@@ -55,12 +59,14 @@ namespace Diary.DataAccess
 
             DumpData(query, note);
         }
+
         public void RemoveNote(Note note)
         {
             string query = $"DELETE from dbo.Note WHERE Id_note={note.IdNote}";
 
             DumpData(query);
         }
+
         public void RemoveNotes(DateTime date)
         {
             string query = $"DELETE from dbo.Note WHERE Note_date='{date.ToShortDateString()}'";
@@ -68,12 +74,15 @@ namespace Diary.DataAccess
             DumpData(query);
         }
 
+        #endregion // Public methods
+
+        #region Private methods
+
         void CheckConnect(string connectionString)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                connection.Close();
             }
         }
 
@@ -83,7 +92,7 @@ namespace Diary.DataAccess
             using (SqlConnection connection =
                            new SqlConnection(connectionString))
             {
-                string query = $"SELECT COUNT(*) from dbo.Note";
+                string query = $"SELECT max(Id_note) from dbo.Note";
 
                 SqlCommand command = new SqlCommand(query, connection);
 
@@ -95,8 +104,6 @@ namespace Diary.DataAccess
                     count = (int)reader[0];
                 }
                 reader.Close();
-                connection.Close();
-
             }
 
             return count;
@@ -120,17 +127,15 @@ namespace Diary.DataAccess
                         new Note(
                                 idNote: (int)reader[0],
                                 noteData: (DateTime)reader[1],
-                                idTypeJob: (int)reader[2],
-                                idRelevance: (int)reader[3],
-                                idProgress: (int)reader[4],
+                                typeJob: new TypeJobRepository(connectionString).GetTypeJob((int)reader[2]),
+                                relevance: new RelevanceRepository(connectionString).GetdRelevance((int)reader[3]),
+                                progress: new ProgressRepository(connectionString).GetProgress((int)reader[4]),
                                 timeStart: (TimeSpan) reader[5],
                                 timeFinish: (TimeSpan)reader[6]
                             )
                         );
                 }
                 reader.Close();
-                connection.Close();
-
             }
 
             return loadList;
@@ -145,8 +150,6 @@ namespace Diary.DataAccess
 
                 connection.Open();
                 command.ExecuteNonQuery();
-
-                connection.Close();
             }
         }
         void DumpData(string query, Note note)
@@ -156,17 +159,17 @@ namespace Diary.DataAccess
             {
                 SqlCommand command = new SqlCommand(query, connection);
                 command.Parameters.AddWithValue("@Note_date", note.NoteDate.ToShortDateString());
-                command.Parameters.AddWithValue("@Id_type_job", note.IdTypeJob);
-                command.Parameters.AddWithValue("@Id_relevance", note.IdRelevance);
-                command.Parameters.AddWithValue("@Id_progress", note.IdProgress);
+                command.Parameters.AddWithValue("@Id_type_job", note.TypeJob.IdTypeJob);
+                command.Parameters.AddWithValue("@Id_relevance", note.Relevance.IdRelevance);
+                command.Parameters.AddWithValue("@Id_progress", note.Progress.IdProgress);
                 command.Parameters.AddWithValue("@Time_start", note.TimeStart);
                 command.Parameters.AddWithValue("@Time_finish", note.TimeFinish);
 
                 connection.Open();
                 command.ExecuteNonQuery();
-
-                connection.Close();
             }
         }
+
+        #endregion // Private methods
     }
 }

@@ -16,10 +16,13 @@ namespace Diary.ViewModel
 
         MainWindowViewModel mainWindowViewModel;
 
+        public delegate void AccountHandler(BaseViewModel baseViewModel);
+        public event AccountHandler Notify;
+
         #endregion // Fields
 
         #region Constructor
-        
+
         public NotesOfDayViewModel(MainWindowViewModel mainWindowViewModel)
         {
 
@@ -28,7 +31,6 @@ namespace Diary.ViewModel
             NoteViewModels = new ObservableCollection<NoteViewModel>();
 
             UpdateNoteViewModels();
-
         }
 
         #endregion // Constructor
@@ -44,6 +46,7 @@ namespace Diary.ViewModel
             set
             {
                 selectedNoteViewModel = value;
+                OnPropertyChanged("SelectedNoteViewModel");
             }
         }
         public ObservableCollection<NoteViewModel> NoteViewModels { get; set; }
@@ -51,6 +54,16 @@ namespace Diary.ViewModel
         #endregion // Properties
 
         #region Private methods
+        
+        void CreateNewNote()
+        {
+            Note note = new Note();
+            note.NoteDate = DateTime.Now;
+            NoteViewModel workspace = new NoteViewModel(note, mainWindowViewModel.NoteRepository, mainWindowViewModel.SelectedDate);
+            workspace.UpdateWorkstapeNotify += mainWindowViewModel.SetListNotesViewOnWorkspace;
+
+            Notify?.Invoke(workspace);
+        }
 
         void UpdateNoteViewModels()
         {
@@ -62,9 +75,10 @@ namespace Diary.ViewModel
                 {
                     NoteViewModel _noteVM = new NoteViewModel(
                             note: note,
-                            mainWindowViewModel: mainWindowViewModel
-                            );
-
+                            noteRepository: mainWindowViewModel.NoteRepository,
+                            selectedDate: mainWindowViewModel.SelectedDate );
+                    _noteVM.UpdateWorkstapeNotify += mainWindowViewModel.SetListNotesViewOnWorkspace;
+                    _noteVM.ChangeNoteNotify += mainWindowViewModel.ChangeNote;
                     NoteViewModels.Add(_noteVM);
                         
                 }
@@ -79,7 +93,10 @@ namespace Diary.ViewModel
         {
             get
             {
-                return mainWindowViewModel.CreateNewNoteCommand;
+                return new RelayCommand(
+                        param => this.CreateNewNote(),
+                        param => CheckTimeNote(mainWindowViewModel.SelectedDate)
+                        );
             }
         }
 

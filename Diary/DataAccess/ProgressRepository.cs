@@ -12,7 +12,6 @@ namespace Diary.DataAccess
         #region Fields
 
         string connectionString;
-        readonly List<Progress> _progresses;
 
         #endregion // Fields
 
@@ -20,18 +19,41 @@ namespace Diary.DataAccess
 
         public ProgressRepository(string connectionString)
         {
+            CheckConnect(connectionString);
             this.connectionString = connectionString;
-            this._progresses = LoadAllData();
         }
 
         #endregion // Constructor
 
-        public List<Progress> GetProgresses()
+        #region Public methods
+
+        public List<Progress> GetAllProgresses()
         {
-            return new List<Progress>(_progresses);
+            string query = "SELECT *  from dbo.Progress";
+
+            return LoadData(query);
         }
 
-        List<Progress> LoadAllData()
+        public Progress GetProgress(int IdProgress)
+        {
+            string query = $"SELECT *  from dbo.Progress WHERE Id_progress={IdProgress}";
+
+            return LoadData(query)[0];
+        }
+
+        #endregion // Public methods
+
+        #region Private methods
+
+        void CheckConnect(string connectionString)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                connection.Close();
+            }
+        }
+        List<Progress> LoadData(string query)
         {
 
             List<Progress> loadList = new List<Progress>();
@@ -39,8 +61,7 @@ namespace Diary.DataAccess
             using (SqlConnection connection =
                new SqlConnection(connectionString))
             {
-                string queryString = "SELECT *  from dbo.Progress";
-                SqlCommand command = new SqlCommand(queryString, connection);
+                SqlCommand command = new SqlCommand(query, connection);
 
                 connection.Open();
                 SqlDataReader reader = command.ExecuteReader();
@@ -59,5 +80,7 @@ namespace Diary.DataAccess
 
             return loadList;
         }
+
+        #endregion // Private methods
     }
 }

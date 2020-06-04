@@ -10,12 +10,10 @@ namespace Diary.ViewModel
     public class MainWindowViewModel: BaseViewModel
     {
         #region Fields
+
         DateTime selectedDate;
 
         readonly NoteRepository noteRepository;
-        readonly ProgressRepository progressRepository;
-        readonly RelevanceRepository relevanceRepository;
-        readonly TypeJobRepository typeJobRepository;
 
         WorkspaceViewModel workspaceViewModel;
 
@@ -25,19 +23,21 @@ namespace Diary.ViewModel
 
         public MainWindowViewModel(string connectionString)
         {
-            noteRepository = new NoteRepository(connectionString);
-            progressRepository = new ProgressRepository(connectionString);
-            relevanceRepository = new RelevanceRepository(connectionString);
-            typeJobRepository = new TypeJobRepository(connectionString);
+            try
+            {
+                noteRepository = new NoteRepository(connectionString);
+            }
+            catch
+            {
+
+            }
         }
 
         #endregion // Constructor
 
         #region Properties
+
         public NoteRepository NoteRepository { get => noteRepository; }
-        public ProgressRepository ProgressRepository { get => progressRepository; }
-        public TypeJobRepository TypeJobRepository { get => typeJobRepository; }
-        public RelevanceRepository RelevanceRepository { get => relevanceRepository; }
 
         public WorkspaceViewModel WorkspaceViewModel
         {
@@ -55,18 +55,6 @@ namespace Diary.ViewModel
             {
                 workspaceViewModel = value;
                 OnPropertyChanged("WorksapceViewModel");
-            }
-        }
-
-        bool CheckTimeNote
-        {
-            get
-            {
-                if (SelectedDate.Date == DateTime.Now.Date)
-                {
-                    return true;
-                }
-                return false;
             }
         }
 
@@ -88,31 +76,29 @@ namespace Diary.ViewModel
 
         #endregion // Properties
 
-        #region Private functions
+        #region Public methods
+
+        public void ChangeNote()
+        {
+            BaseViewModel workspace = (workspaceViewModel.CurrentContentVM as NotesOfDayViewModel).SelectedNoteViewModel;
+            (workspace as NoteViewModel).UpdateWorkstapeNotify += SetListNotesViewOnWorkspace;
+            UpdateWorkspaceViewModel(workspace);
+        }
+
+        public void SetListNotesViewOnWorkspace()
+        {
+            NotesOfDayViewModel workspace = new NotesOfDayViewModel(this);
+            workspace.Notify += UpdateWorkspaceViewModel;
+            UpdateWorkspaceViewModel(workspace);
+        }
+
+        #endregion // Public methods
+
+        #region Private methods
 
         void UpdateWorkspaceViewModel(BaseViewModel workspace)
         {
             workspaceViewModel.CurrentContentVM = workspace;
-        }
-
-        void CreateNewNote()
-        {
-            Note note = new Note();
-            note.NoteDate = DateTime.Now;
-            NoteViewModel workspace = new NoteViewModel(note, this);
-            UpdateWorkspaceViewModel(workspace);
-        }
-
-        void ChangeNote()
-        {
-            BaseViewModel workspace = (workspaceViewModel.CurrentContentVM as NotesOfDayViewModel).SelectedNoteViewModel;
-            UpdateWorkspaceViewModel(workspace);
-        }
-
-        void SetListNotesViewOnWorkspace()
-        {
-            NotesOfDayViewModel workspace = new NotesOfDayViewModel(this);
-            UpdateWorkspaceViewModel(workspace);
         }
 
         #endregion // Private functions
@@ -124,33 +110,11 @@ namespace Diary.ViewModel
             get
             {
                 return new RelayCommand(
-                    obj =>{
-                            this.SetListNotesViewOnWorkspace();
-                        });
+                         param => this.SetListNotesViewOnWorkspace()
+                    );
             }
         }
-        public RelayCommand CreateNewNoteCommand
-        {
-            get
-            {
-                return new RelayCommand(
-                        param => {
-                            this.CreateNewNote();
-                        },
-                        param => this.CheckTimeNote
-                        );
-            }
-        }
-        public RelayCommand ChangeNoteCommand
-        {
-            get
-            {
-                return new RelayCommand(
-                        param => this.ChangeNote(),
-                        param => this.CheckTimeNote
-                        );
-            }
-        }
+
         public RelayCommand UpdateWorckspaceCommand
         {
             get
@@ -170,6 +134,7 @@ namespace Diary.ViewModel
                     );
             }
         }
+
         #endregion // Commands
     }
 }

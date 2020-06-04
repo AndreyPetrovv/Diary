@@ -13,9 +13,9 @@ namespace Diary.Model
 
         int idNote = -1;
         DateTime noteData;
-        int idTypeJob;
-        int idRelevance;
-        int idProgress;
+        TypeJob typeJob;
+        Relevance relevance;
+        Progress progress;
         TimeSpan timeStart;
         TimeSpan timeFinish;
 
@@ -26,26 +26,23 @@ namespace Diary.Model
         public Note()
         {
             idNote = -1;
-            idTypeJob = -1;
-            idRelevance = -1;
-            idProgress = -1;
         }
 
         public Note(
             int idNote,
             DateTime noteData,
-            int idTypeJob,
-            int idRelevance,
-            int idProgress,
+            TypeJob typeJob,
+            Relevance relevance,
+            Progress progress,
             TimeSpan timeStart,
             TimeSpan timeFinish
             )
         {
             this.idNote = idNote;
             this.noteData = noteData;
-            this.idTypeJob = idTypeJob;
-            this.idRelevance = idRelevance;
-            this.idProgress = idProgress;
+            this.TypeJob = typeJob;
+            this.Relevance = relevance;
+            this.Progress = progress;
             this.timeStart = timeStart;
             this.timeFinish = timeFinish;
         }
@@ -58,11 +55,11 @@ namespace Diary.Model
 
         public DateTime NoteDate { get => noteData; set => noteData = value; }
 
-        public int IdTypeJob { get => idTypeJob; set => idTypeJob = value; }
+        public TypeJob TypeJob { get => typeJob; set => typeJob = value; }
 
-        public int IdRelevance { get => idRelevance; set => idRelevance = value; }
+        public Relevance Relevance { get => relevance; set => relevance = value; }
 
-        public int IdProgress { get => idProgress; set => idProgress = value; }
+        public Progress Progress { get => progress; set => progress = value; }
 
         public TimeSpan TimeStart { get => timeStart; set => timeStart = value; }
 
@@ -74,7 +71,7 @@ namespace Diary.Model
         {
             get
             {
-                if (ValidateTime() & ValidateProgress() & ValidateRelevance() & ValidateTypeJob())
+                if (ValidateTime() && ValidateProgress() && ValidateRelevance() && ValidateTypeJob())
                 {
                     return true;
                 }
@@ -85,7 +82,7 @@ namespace Diary.Model
 
         public bool ValidateTypeJob()
         {
-            if (idTypeJob == -1)
+            if (typeJob == null)
             {
                 return false;
             }
@@ -93,7 +90,7 @@ namespace Diary.Model
         }
         public bool ValidateRelevance()
         {
-            if (idRelevance == -1)
+            if (relevance == null)
             {
                 return false;
             }
@@ -101,7 +98,7 @@ namespace Diary.Model
         }
         public bool ValidateProgress()
         {
-            if (idProgress == -1)
+            if (progress == null)
             {
                 return false;
             }

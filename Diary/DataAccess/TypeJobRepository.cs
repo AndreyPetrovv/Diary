@@ -11,7 +11,6 @@ namespace Diary.DataAccess
         #region Fields
 
         string connectionString;
-        readonly List<TypeJob> _typeJobs;
 
         #endregion // Fields
 
@@ -19,18 +18,40 @@ namespace Diary.DataAccess
 
         public TypeJobRepository(string connectionString)
         {
+            CheckConnect(connectionString);
             this.connectionString = connectionString;
-            this._typeJobs = LoadAllData();
         }
 
         #endregion // Constructor
 
-        public List<TypeJob> GetTypeJobs()
+        #region Public methods
+
+        public List<TypeJob> GetAllTypeJobs()
         {
-            return new List<TypeJob>(_typeJobs);
+            string query = $"SELECT *  from dbo.Type_job";
+
+            return LoadData(query);
         }
 
-        List<TypeJob> LoadAllData()
+        public TypeJob GetTypeJob(int IdTypeJob)
+        {
+            string query = $"SELECT *  from dbo.Type_job WHERE Id_type_job={IdTypeJob}";
+
+            return LoadData(query)[0];
+        }
+        #endregion // Public methods
+
+        #region Private methods
+
+        void CheckConnect(string connectionString)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                connection.Close();
+            }
+        }
+        List<TypeJob> LoadData(string query)
         {
 
             List<TypeJob> loadList = new List<TypeJob>();
@@ -38,8 +59,7 @@ namespace Diary.DataAccess
             using (SqlConnection connection =
                new SqlConnection(connectionString))
             {
-                string queryString = "SELECT *  from dbo.Type_job";
-                SqlCommand command = new SqlCommand(queryString, connection);
+                SqlCommand command = new SqlCommand(query, connection);
                 
                 connection.Open();
                 SqlDataReader reader = command.ExecuteReader();
@@ -59,5 +79,6 @@ namespace Diary.DataAccess
             return loadList;
         }
 
+        #endregion // Private methods
     }
 }

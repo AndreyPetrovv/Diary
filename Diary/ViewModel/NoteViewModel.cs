@@ -14,35 +14,39 @@ namespace Diary.ViewModel
         #region Fields
 
         Note _note;
-        MainWindowViewModel mainWindowViewModel;
+        DateTime selectedDate;
 
-        string typeJob;
-        string relevance;
-        string progress;
+        public delegate void AccountHandler();
+        public event AccountHandler UpdateWorkstapeNotify;
+        public event AccountHandler ChangeNoteNotify;
+
+        readonly NoteRepository noteRepository;
+        readonly TypeJobRepository typeJobRepository;
+        readonly ProgressRepository progressRepository;
+        readonly RelevanceRepository relevanceRepository;
 
         string timeStartHours;
         string timeStartMinutes;
         string timeFinishHours;
         string timeFinishMinutes;
 
-        string[] _noteTypeJobs;
-        string[] _noteRelevances;
-        string[] _noteProgresses;
+        TypeJob[] _noteTypeJobs;
+        Relevance[] _noteRelevances;
+        Progress[] _noteProgresses;
 
         #endregion // Fields
 
         #region Constructor
 
-        public NoteViewModel(
-            Note note,
-            MainWindowViewModel mainWindowViewModel)
+        public NoteViewModel(Note note, NoteRepository noteRepository, DateTime selectedDate)
         {
-            this.mainWindowViewModel = mainWindowViewModel;
             this._note = note;
+            this.noteRepository = noteRepository;
+            this.selectedDate = selectedDate;
 
-            typeJob = IdTypeJobToName();
-            relevance = IdRelevanceToName();
-            progress = IdProgressToName();
+            typeJobRepository = new TypeJobRepository(Properties.Resources.ConnectCommand);
+            progressRepository = new ProgressRepository(Properties.Resources.ConnectCommand);
+            relevanceRepository = new RelevanceRepository(Properties.Resources.ConnectCommand);
 
             TimeStartHours = note.TimeStart.Hours.ToString();
             TimeStartMinutes = note.TimeStart.Minutes.ToString();
@@ -56,56 +60,46 @@ namespace Diary.ViewModel
 
         #region State Properties
         
-        public string TypeJob {
+        public TypeJob NoteTypeJob {
             get
             {
-                return typeJob;
+                return _note.TypeJob;
             }
             set
             {
-                foreach (var item in mainWindowViewModel.TypeJobRepository.GetTypeJobs())
-                {
-                    if (item.NameTypeJob == value)
-                    {
-                        _note.IdTypeJob = item.IdTypeJob;
-                    }
-                }
-                typeJob = value;
+
+                _note.TypeJob = value;
+
+                OnPropertyChanged("NoteTypeJob");
             }
         }
-        public string Relevance {
+        public Relevance NoteRelevance
+        {
             get
             {
-                return relevance;
+                return _note.Relevance;
             }
             set
             {
-                foreach (var item in mainWindowViewModel.RelevanceRepository.GetRelevances())
-                {
-                    if (item.LevelRelevance == value)
-                    {
-                        _note.IdRelevance = item.IdRelevance;
-                    }
-                }
-                relevance = value;
+
+                _note.Relevance = value;
+
+                OnPropertyChanged("NoteRelevance");
             }
         }
-        public string Progress {
+        public Progress NoteProgress
+        {
             get
             {
-                return progress;
+                return _note.Progress;
             }
             set
             {
-                foreach (var item in mainWindowViewModel.ProgressRepository.GetProgresses())
-                {
-                    if (item.StatusProgress == value)
-                    {
-                        this._note.IdProgress = item.IdProgress;
-                    }
-                }
-                progress = value;
-            } 
+
+                _note.Progress = value;
+
+                OnPropertyChanged("NoteProgress");
+            }
         }
         public string TimeStartHours {
             get
@@ -122,6 +116,7 @@ namespace Diary.ViewModel
                     }
                     timeStartHours = value;
                 }
+                OnPropertyChanged("TimeStartHours");
             }
         }
         public string TimeStartMinutes
@@ -140,6 +135,7 @@ namespace Diary.ViewModel
                     }
                     timeStartMinutes = value;
                 }
+                OnPropertyChanged("TimeStartMinutes");
             }
         }
         public string TimeFinishHours
@@ -158,6 +154,7 @@ namespace Diary.ViewModel
                     }
                     timeFinishHours = value;
                 }
+                OnPropertyChanged("TimeFinishHours");
             }
         }
         public string TimeFinishMinutes
@@ -176,11 +173,12 @@ namespace Diary.ViewModel
                     }
                     timeFinishMinutes = value;
                 }
+                OnPropertyChanged("TimeFinishMinutes");
             }
         }
 
-        public string GetString => $"{_note.NoteDate.ToShortDateString()}, Занятие: {TypeJob};\n" +
-            $"Важность: {Relevance} Прогресс: {Progress}\n" +
+        public string GetString => $"{_note.NoteDate.ToShortDateString()}, Занятие: {NoteTypeJob.NameTypeJob};\n" +
+            $"Важность: {NoteRelevance.LevelRelevance} Прогресс: {NoteProgress.StatusProgress}\n" +
             $"Start: {_note.TimeStart.Hours}:{_note.TimeStart.Minutes} " +
             $"Finish: {_note.TimeFinish.Hours}:{_note.TimeFinish.Minutes}";
 
@@ -188,19 +186,19 @@ namespace Diary.ViewModel
 
         #region Presentation Properties
 
-        public string[] NoteTypeJobs
+        public TypeJob[] NoteTypeJobs
         {
             get
             {
                 if (_noteTypeJobs == null)
                 {
-                    _noteTypeJobs = new string[mainWindowViewModel.TypeJobRepository.GetTypeJobs().Count];
+                    _noteTypeJobs = new TypeJob[typeJobRepository.GetAllTypeJobs().Count];
 
                     int i = 0;
 
-                    foreach (var item in mainWindowViewModel.TypeJobRepository.GetTypeJobs())
+                    foreach (var item in typeJobRepository.GetAllTypeJobs())
                     {
-                        _noteTypeJobs[i] = item.NameTypeJob;
+                        _noteTypeJobs[i] = item;
                         i++;
                     }
                 }
@@ -208,19 +206,19 @@ namespace Diary.ViewModel
             }
         }
 
-        public string[] NoteRelevances
+        public Relevance[] NoteRelevances
         {
             get
             {
                 if (_noteRelevances == null)
                 {
-                    _noteRelevances = new string[mainWindowViewModel.RelevanceRepository.GetRelevances().Count];
+                    _noteRelevances = new Relevance[relevanceRepository.GetAllRelevances().Count];
 
                     int i = 0;
 
-                    foreach (var item in mainWindowViewModel.RelevanceRepository.GetRelevances())
+                    foreach (var item in relevanceRepository.GetAllRelevances())
                     {
-                        _noteRelevances[i] = item.LevelRelevance;
+                        _noteRelevances[i] = item;
                         i++;
                     }
                 }
@@ -228,19 +226,19 @@ namespace Diary.ViewModel
             }
         }
 
-        public string[] NoteProgresses
+        public Progress[] NoteProgresses
         {
             get
             {
                 if (_noteProgresses == null)
                 {
-                    _noteProgresses = new string[mainWindowViewModel.ProgressRepository.GetProgresses().Count];
+                    _noteProgresses = new Progress[progressRepository.GetAllProgresses().Count];
 
                     int i = 0;
 
-                    foreach (var item in mainWindowViewModel.ProgressRepository.GetProgresses())
+                    foreach (var item in progressRepository.GetAllProgresses())
                     {
-                        _noteProgresses[i] = item.StatusProgress;
+                        _noteProgresses[i] = item;
                         i++;
                     }
                 }
@@ -251,58 +249,31 @@ namespace Diary.ViewModel
         #endregion // Presentation Properties
 
         #region Private methods
-
-        string IdTypeJobToName()
+        
+        void ChangeNote()
         {
-            foreach (var item in mainWindowViewModel.TypeJobRepository.GetTypeJobs())
-            {
-                if (item.IdTypeJob == _note.IdTypeJob)
-                {
-                    return item.NameTypeJob;
-                }
-            }
-            return "none";
-        }
-        string IdRelevanceToName()
-        {
-            foreach (var item in mainWindowViewModel.RelevanceRepository.GetRelevances())
-            {
-                if (item.IdRelevance == _note.IdRelevance)
-                {
-                    return item.LevelRelevance;
-                }
-            }
-            return "none";
-        }
-        string IdProgressToName()
-        {
-            foreach (var item in mainWindowViewModel.ProgressRepository.GetProgresses())
-            {
-                if (item.IdProgress == _note.IdProgress)
-                {
-                    return item.StatusProgress;
-                }
-            }
-            return "none";
+            ChangeNoteNotify?.Invoke();
         }
 
         void Save()
         {
             if (_note.IdNote == -1)
             {
-                mainWindowViewModel.NoteRepository.AddNote(_note);
+                noteRepository.AddNote(_note);
             }
             else
             {
-                mainWindowViewModel.NoteRepository.UpdateNote(_note);
+                noteRepository.UpdateNote(_note);
             }
+
+            UpdateWorkstapeNotify?.Invoke();
         }
 
         void Delete()
         {
-            mainWindowViewModel.NoteRepository.RemoveNote(_note);
+            noteRepository.RemoveNote(_note);
 
-            base.OnPropertyChanged("CurrentContentVM");
+            UpdateWorkstapeNotify?.Invoke();
         }
 
         bool CheckValidTimeH(string time)
@@ -344,14 +315,10 @@ namespace Diary.ViewModel
         {
             get
             {
-                return mainWindowViewModel.ChangeNoteCommand;
-            }
-        }
-        public RelayCommand UpdateWorckspaceCommand 
-        {
-            get
-            {
-                return mainWindowViewModel.UpdateWorckspaceCommand;
+                return new RelayCommand(
+                        param => this.ChangeNote(),
+                        param => CheckTimeNote(selectedDate)
+                        );
             }
         }
 
@@ -360,11 +327,7 @@ namespace Diary.ViewModel
             get
             {
                 return new RelayCommand(
-                        param => {
-                            this.Save();
-                            this.UpdateWorckspaceCommand.Execute(null);
-                            }
-                        ,
+                        param =>  this.Save(),
                         param => this.CanSave
                         );
             }
@@ -374,11 +337,8 @@ namespace Diary.ViewModel
             get
             {
                 return new RelayCommand(
-                    param =>
-                        {
-                            this.Delete();
-                            this.UpdateWorckspaceCommand.Execute(null);
-                        }
+                    param => this.Delete(),
+                    param => CheckTimeNote(selectedDate)
                     );
             }
         }

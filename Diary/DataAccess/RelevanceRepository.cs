@@ -12,7 +12,6 @@ namespace Diary.DataAccess
         #region Fields
 
         string connectionString;
-        readonly List<Relevance> _relevances;
 
         #endregion // Fields
 
@@ -20,18 +19,42 @@ namespace Diary.DataAccess
 
         public RelevanceRepository(string connectionString)
         {
+            CheckConnect(connectionString);
             this.connectionString = connectionString;
-            this._relevances = LoadAllData();
         }
 
         #endregion // Constructor
 
-        public List<Relevance> GetRelevances()
+
+        #region Public methods
+
+        public List<Relevance> GetAllRelevances()
         {
-            return new List<Relevance>(_relevances);
+            string query = "SELECT *  from dbo.Relevance";
+
+            return LoadData(query);
         }
 
-        List<Relevance> LoadAllData()
+        public Relevance GetdRelevance(int IdRelevance)
+        {
+            string query = $"SELECT *  from dbo.Relevance WHERE Id_relevance={IdRelevance}";
+
+            return LoadData(query)[0];
+        }
+
+        #endregion // Public methods
+
+        #region Private methods
+
+        void CheckConnect(string connectionString)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                connection.Close();
+            }
+        }
+        List<Relevance> LoadData(string query)
         {
 
             List<Relevance> loadList = new List<Relevance>();
@@ -39,8 +62,7 @@ namespace Diary.DataAccess
             using (SqlConnection connection =
                new SqlConnection(connectionString))
             {
-                string queryString = "SELECT *  from dbo.Relevance";
-                SqlCommand command = new SqlCommand(queryString, connection);
+                SqlCommand command = new SqlCommand(query, connection);
 
                 connection.Open();
                 SqlDataReader reader = command.ExecuteReader();
@@ -59,5 +81,7 @@ namespace Diary.DataAccess
 
             return loadList;
         }
+
+        #endregion // Private methods
     }
 }

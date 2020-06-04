@@ -24,9 +24,6 @@ namespace Diary.DataGeneration
                 {
                     Note note = new Note();
                     note.NoteDate = dateNote;
-                    note.IdTypeJob = saintRandom.Next(1, 6);
-                    note.IdRelevance = saintRandom.Next(1, 4);
-                    note.IdProgress = saintRandom.Next(1, 4);
                     note.TimeStart = new TimeSpan(timeLines[j], 1, 0);
                     note.TimeFinish = new TimeSpan(timeLines[j+1], 0, 0);
 

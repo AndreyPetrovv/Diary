@@ -6,6 +6,8 @@ namespace Diary.ViewModel
 {
     public class BaseViewModel: INotifyPropertyChanged
     {
+        #region Properties 
+
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName]string prop = "")
         {
@@ -14,5 +16,22 @@ namespace Diary.ViewModel
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
             }
         }
+
+        #endregion // Properties
+
+        #region Protected helpers
+
+        protected bool CheckTimeNote(DateTime selectedDate)
+        {
+
+            if (selectedDate == DateTime.Now.Date)
+            {
+                return true;
+            }
+            return false;
+
+        }
+
+        #endregion // Protected helpers
     }
 }
