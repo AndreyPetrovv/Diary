@@ -20,7 +20,7 @@
                 <Style TargetType="ListBoxItem">
                     <Setter Property="ContextMenu">
                         <Setter.Value>
-                            <ContextMenu >
+                            <ContextMenu>
                                 <MenuItem Header="Изменить"
                                           Command="{Binding Path=ChangeNoteCommand}"> 
                                 </MenuItem>

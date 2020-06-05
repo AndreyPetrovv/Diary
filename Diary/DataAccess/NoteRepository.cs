@@ -33,6 +33,12 @@ namespace Diary.DataAccess
             string query = $"SELECT *  from dbo.Note WHERE Note_date='{date.Date.ToShortDateString()}'";
             return LoadData(query);
         }
+        public List<Note> GetNotesOfDays(DateTime dateBegin, DateTime dateEnd)
+        {
+            string query = $"SELECT *  from dbo.Note WHERE Note_date>='{dateBegin.Date.ToShortDateString()}' " +
+                $"and Note_date <= '{dateEnd.Date.ToShortDateString()}'";
+            return LoadData(query);
+        }
 
         public List<Note> GetAllNotes()
         {

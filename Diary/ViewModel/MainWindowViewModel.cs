@@ -101,6 +101,29 @@ namespace Diary.ViewModel
             workspaceViewModel.CurrentContentVM = workspace;
         }
 
+         void SetStaticInfoViewOnWorkspace(string key)
+        {
+            StaticInfoViewModel workspace = null;
+            DateTime dateBegin;
+            switch (key)
+            {
+                case "AllTime":
+                    workspace = new StaticInfoViewModel(noteRepository.GetAllNotes());
+                    break;
+                case "LastMonth":
+                    dateBegin = DateTime.Now.AddDays(-30);
+                    workspace = new StaticInfoViewModel(noteRepository.GetNotesOfDays(dateBegin, DateTime.Now));
+                    break;
+                case "LastWeek":
+                    dateBegin = DateTime.Now.AddDays(-7);
+                    workspace = new StaticInfoViewModel(noteRepository.GetNotesOfDays(dateBegin, DateTime.Now));
+                    break;
+            }
+
+            workspace.QuitNotify += SetListNotesViewOnWorkspace;
+            UpdateWorkspaceViewModel(workspace);
+        }
+
         #endregion // Private functions
 
         #region Commands
@@ -131,6 +154,16 @@ namespace Diary.ViewModel
             {
                 return new RelayCommand(
                         param => new DataGenerator().GenerateNotes(noteRepository)
+                    );
+            }
+        }
+
+        public RelayCommand CountStaticInfCommand
+        {
+            get
+            {
+                return new RelayCommand(
+                        param => this.SetStaticInfoViewOnWorkspace((string)param)
                     );
             }
         }

@@ -1,0 +1,35 @@
+﻿<UserControl x:Class="Diary.View.StaticInfoView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Diary.View"
+             mc:Ignorable="d" 
+             d:DesignHeight="420" d:DesignWidth="400">
+    <Grid>
+        <StackPanel Height="400" VerticalAlignment="Top">
+
+            <Label Height="30" HorizontalAlignment="Center">Value counts</Label>
+            <ListBox Height="150" ItemsSource="{Binding ValueCounts}">
+            </ListBox>
+
+            <Label Height="30" HorizontalAlignment="Center">Mean time (Min)</Label>
+            <TextBlock Height="30" Text="{Binding MeanTime}" HorizontalAlignment="Center">
+            </TextBlock>
+            
+            <Label Height="30" HorizontalAlignment="Center">Max time (Min)</Label>
+            <TextBlock Height="30" Text="{Binding MaxTime}" HorizontalAlignment="Center">
+
+            </TextBlock>
+            
+            <Label Height="30" HorizontalAlignment="Center">Min time (Min)</Label>
+            <TextBlock Height="30" Text="{Binding MinTime}" HorizontalAlignment="Center">
+
+            </TextBlock>
+            
+        </StackPanel>
+
+        <Button Command="{Binding QuitCommand}" VerticalAlignment="Bottom" HorizontalAlignment="Right" Height="20" Width="80" Content="Quit"/>
+
+    </Grid>
+</UserControl>

@@ -8,7 +8,7 @@ using System.ComponentModel;
 
 namespace Diary.ViewModel
 {
-    public class NoteViewModel: BaseViewModel
+    public class NoteViewModel: WorkspaceViewModel
     {
 
         #region Fields
@@ -20,10 +20,10 @@ namespace Diary.ViewModel
         public event AccountHandler UpdateWorkstapeNotify;
         public event AccountHandler ChangeNoteNotify;
 
-        readonly NoteRepository noteRepository;
-        readonly TypeJobRepository typeJobRepository;
-        readonly ProgressRepository progressRepository;
-        readonly RelevanceRepository relevanceRepository;
+        NoteRepository noteRepository;
+        TypeJobRepository typeJobRepository;
+        ProgressRepository progressRepository;
+        RelevanceRepository relevanceRepository;
 
         string timeStartHours;
         string timeStartMinutes;
@@ -281,7 +281,7 @@ namespace Diary.ViewModel
             int testTime;
             if (time.Length >= 0 && time.Length <= 2 && int.TryParse(time, out testTime))
             {
-                if (testTime >= 0 && testTime <= 24)
+                if (testTime >= 0 && testTime < 24)
                 {
                     return true;
                 }

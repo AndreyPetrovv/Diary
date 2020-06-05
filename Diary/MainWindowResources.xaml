@@ -13,7 +13,9 @@
     <DataTemplate DataType="{x:Type vm:NoteViewModel}">
         <vw:NoteView/>
     </DataTemplate>
-
+    <DataTemplate DataType="{x:Type vm:StaticInfoViewModel}">
+        <vw:StaticInfoView/>
+    </DataTemplate>
 
     <Style x:Key="StyleCalanderDayButton" TargetType="{x:Type CalendarDayButton}">
         <Setter Property="Height" Value="40"></Setter>
