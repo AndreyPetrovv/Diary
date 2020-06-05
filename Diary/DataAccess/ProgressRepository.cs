@@ -34,11 +34,11 @@ namespace Diary.DataAccess
             return LoadData(query);
         }
 
-        public Progress GetProgress(int IdProgress)
+        public Progress GetProgress(int idProgress)
         {
-            string query = $"SELECT *  from dbo.Progress WHERE Id_progress={IdProgress}";
+            string query = $"SELECT *  from dbo.Progress WHERE Id_progress=@Id_progress";
 
-            return LoadData(query)[0];
+            return LoadData(query, idProgress)[0];
         }
 
         #endregion // Public methods
@@ -62,6 +62,34 @@ namespace Diary.DataAccess
                new SqlConnection(connectionString))
             {
                 SqlCommand command = new SqlCommand(query, connection);
+
+                connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    loadList.Add(
+                        new Progress(
+                                idProgress: (int)reader[0],
+                                statusProgress: (string)reader[1]
+                            )
+                        );
+                }
+                reader.Close();
+            }
+
+            return loadList;
+        }
+        List<Progress> LoadData(string query, int idProgress)
+        {
+
+            List<Progress> loadList = new List<Progress>();
+
+            using (SqlConnection connection =
+               new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@Id_progress", idProgress);
 
                 connection.Open();
                 SqlDataReader reader = command.ExecuteReader();

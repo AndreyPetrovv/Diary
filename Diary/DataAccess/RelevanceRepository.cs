@@ -35,11 +35,11 @@ namespace Diary.DataAccess
             return LoadData(query);
         }
 
-        public Relevance GetdRelevance(int IdRelevance)
+        public Relevance GetdRelevance(int idRelevance)
         {
-            string query = $"SELECT *  from dbo.Relevance WHERE Id_relevance={IdRelevance}";
+            string query = $"SELECT *  from dbo.Relevance WHERE Id_relevance=@Id_relevance";
 
-            return LoadData(query)[0];
+            return LoadData(query, idRelevance)[0];
         }
 
         #endregion // Public methods
@@ -81,7 +81,34 @@ namespace Diary.DataAccess
 
             return loadList;
         }
+        List<Relevance> LoadData(string query, int idRelevance)
+        {
 
+            List<Relevance> loadList = new List<Relevance>();
+
+            using (SqlConnection connection =
+               new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@Id_relevance", idRelevance);
+
+                connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    loadList.Add(
+                        new Relevance(
+                                idRelevance: (int)reader[0],
+                                levelRelevance: (string)reader[1]
+                            )
+                        );
+                }
+                reader.Close();
+            }
+
+            return loadList;
+        }
         #endregion // Private methods
     }
 }

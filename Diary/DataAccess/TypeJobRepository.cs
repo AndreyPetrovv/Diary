@@ -33,11 +33,11 @@ namespace Diary.DataAccess
             return LoadData(query);
         }
 
-        public TypeJob GetTypeJob(int IdTypeJob)
+        public TypeJob GetTypeJob(int idTypeJob)
         {
-            string query = $"SELECT *  from dbo.Type_job WHERE Id_type_job={IdTypeJob}";
+            string query = $"SELECT *  from dbo.Type_job WHERE Id_type_job=@Id_type_job";
 
-            return LoadData(query)[0];
+            return LoadData(query, idTypeJob)[0];
         }
         #endregion // Public methods
 
@@ -61,6 +61,34 @@ namespace Diary.DataAccess
             {
                 SqlCommand command = new SqlCommand(query, connection);
                 
+                connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    loadList.Add(
+                        new TypeJob(
+                                idTypeJob: (int)reader[0],
+                                nameTypeJob: (string)reader[1]
+                            )
+                        );
+                }
+                reader.Close();
+            }
+
+            return loadList;
+        }
+        List<TypeJob> LoadData(string query, int idTypeJob)
+        {
+
+            List<TypeJob> loadList = new List<TypeJob>();
+
+            using (SqlConnection connection =
+               new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@Id_type_job", idTypeJob);
+
                 connection.Open();
                 SqlDataReader reader = command.ExecuteReader();
 
