@@ -25,13 +25,16 @@
 
         <Menu Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
             <MenuItem Header="File" Height="30">
-                <MenuItem Header="Generate Data" Command="{Binding GenerateDataCommand}"/>
+                <MenuItem Header="Generate Data">
+                    <MenuItem Header="Generate 7 notes" Command="{Binding GenerateDataCommand}" CommandParameter="7" />
+                    <MenuItem Header="Generate 15 notes" Command="{Binding GenerateDataCommand}" CommandParameter="15" />
+                    <MenuItem Header="Generate 30 notes" Command="{Binding GenerateDataCommand}" CommandParameter="30" />
+                </MenuItem>
                 <MenuItem Header="Count Static Information" >
                     <MenuItem Header="Static information for the all time" Command="{Binding CountStaticInfCommand}" CommandParameter="AllTime" ></MenuItem>
                     <MenuItem Header="Static information for the last month" Command="{Binding CountStaticInfCommand}" CommandParameter="LastMonth"></MenuItem>
                     <MenuItem Header="Static information for the last week" Command="{Binding CountStaticInfCommand}" CommandParameter="LastWeek"></MenuItem>
                 </MenuItem>
-                <MenuItem Header="Exit"/>
             </MenuItem>
         </Menu>
 

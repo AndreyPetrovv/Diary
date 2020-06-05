@@ -137,20 +137,4 @@
     <value>Diary</value>
     <comment>Title of the main window</comment>
   </data>
-  <data name="ProgressError" xml:space="preserve">
-    <value>Not select progress</value>
-    <comment>message error</comment>
-  </data>
-  <data name="RelevanceError" xml:space="preserve">
-    <value>Not select relevance</value>
-    <comment>message error</comment>
-  </data>
-  <data name="TimeError" xml:space="preserve">
-    <value>Not currect time</value>
-    <comment>message error</comment>
-  </data>
-  <data name="TypeJobError" xml:space="preserve">
-    <value>Not select type job</value>
-    <comment>message error</comment>
-  </data>
 </root>

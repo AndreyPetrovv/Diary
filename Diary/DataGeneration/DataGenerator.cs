@@ -10,12 +10,20 @@ namespace Diary.DataGeneration
     {
         #region Public methods
 
-        public void GenerateNotes(NoteRepository noteRepository)
+        public void GenerateNotes(
+            NoteRepository noteRepository,
+            int countNotes
+            )
         {
             Random saintRandom = new Random();
             DateTime dateNote = DateTime.Now.AddDays(-3);
 
-            for (int i = 0; i < 35; i++)
+            List<TypeJob> typeJobs = new TypeJobRepository(Properties.Resources.ConnectCommand).GetAllTypeJobs();
+            List<Relevance> relevances = new RelevanceRepository(Properties.Resources.ConnectCommand).GetAllRelevances();
+            List<Progress> progresses = new ProgressRepository(Properties.Resources.ConnectCommand).GetAllProgresses();
+
+
+            for (int i = 0; i < countNotes; i++)
             {
                 noteRepository.RemoveNotes(dateNote);
 
@@ -23,7 +31,11 @@ namespace Diary.DataGeneration
                 for (int j = 0; j < timeLines.Length-1; j+=1)
                 {
                     Note note = new Note();
+
                     note.NoteDate = dateNote;
+                    note.TypeJob = typeJobs[saintRandom.Next(1, 6)];
+                    note.Relevance = relevances[saintRandom.Next(1, 4)];
+                    note.Progress = progresses[saintRandom.Next(1, 4)];
                     note.TimeStart = new TimeSpan(timeLines[j], 1, 0);
                     note.TimeFinish = new TimeSpan(timeLines[j+1], 0, 0);
 

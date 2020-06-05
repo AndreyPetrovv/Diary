@@ -337,8 +337,7 @@ namespace Diary.ViewModel
             get
             {
                 return new RelayCommand(
-                    param => this.Delete(),
-                    param => CheckTimeNote(selectedDate)
+                    param => this.Delete()
                     );
             }
         }

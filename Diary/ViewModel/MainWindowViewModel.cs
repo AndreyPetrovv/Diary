@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows;
 using Diary.DataAccess;
 using Diary.DataGeneration;
 using Diary.Model;
@@ -10,6 +11,8 @@ namespace Diary.ViewModel
     public class MainWindowViewModel: BaseViewModel
     {
         #region Fields
+
+        bool isConnectToDB;
 
         DateTime selectedDate;
 
@@ -26,10 +29,12 @@ namespace Diary.ViewModel
             try
             {
                 noteRepository = new NoteRepository(connectionString);
+                isConnectToDB = true;
             }
             catch
             {
-
+                MessageBox.Show("Can't conntect to data base");
+                isConnectToDB = false;
             }
         }
 
@@ -43,7 +48,7 @@ namespace Diary.ViewModel
         {
             get
             {
-                if(workspaceViewModel == null)
+                if(workspaceViewModel == null && isConnectToDB)
                 {
                     workspaceViewModel = new WorkspaceViewModel();
                     workspaceViewModel.CurrentContentVM = new NotesOfDayViewModel(this);
@@ -81,8 +86,15 @@ namespace Diary.ViewModel
         public void ChangeNote()
         {
             BaseViewModel workspace = (workspaceViewModel.CurrentContentVM as NotesOfDayViewModel).SelectedNoteViewModel;
-            (workspace as NoteViewModel).UpdateWorkstapeNotify += SetListNotesViewOnWorkspace;
-            UpdateWorkspaceViewModel(workspace);
+            if (workspace != null)
+            {
+                (workspace as NoteViewModel).UpdateWorkstapeNotify += SetListNotesViewOnWorkspace;
+                UpdateWorkspaceViewModel(workspace);
+            }
+            else
+            {
+                MessageBox.Show("Select item !");
+            }
         }
 
         public void SetListNotesViewOnWorkspace()
@@ -133,7 +145,8 @@ namespace Diary.ViewModel
             get
             {
                 return new RelayCommand(
-                         param => this.SetListNotesViewOnWorkspace()
+                         param => this.SetListNotesViewOnWorkspace(),
+                         param => isConnectToDB
                     );
             }
         }
@@ -143,7 +156,8 @@ namespace Diary.ViewModel
             get
             {
                 return new RelayCommand(
-                        param => this.SetListNotesViewOnWorkspace()
+                        param => this.SetListNotesViewOnWorkspace(),
+                        param => isConnectToDB
                     );
             }
         }
@@ -153,7 +167,12 @@ namespace Diary.ViewModel
             get
             {
                 return new RelayCommand(
-                        param => new DataGenerator().GenerateNotes(noteRepository)
+
+                        param => {
+                            new DataGenerator().GenerateNotes(noteRepository, int.Parse((string)param));
+                            this.SetListNotesViewOnWorkspace();
+                        },
+                        param => isConnectToDB
                     );
             }
         }
@@ -163,8 +182,9 @@ namespace Diary.ViewModel
             get
             {
                 return new RelayCommand(
-                        param => this.SetStaticInfoViewOnWorkspace((string)param)
-                    );
+                        param => this.SetStaticInfoViewOnWorkspace((string)param),
+                        param => isConnectToDB
+                    ) ;
             }
         }
 
