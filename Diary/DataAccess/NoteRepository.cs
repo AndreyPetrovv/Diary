@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Text;
 using Diary.Model;
-
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Diary.DataAccess
 {
@@ -12,6 +13,10 @@ namespace Diary.DataAccess
         #region Fields
 
         string connectionString;
+
+        DateTime curTime;
+
+        List<Note> notesSelectDay;
 
         #endregion // Fields
 
@@ -30,32 +35,60 @@ namespace Diary.DataAccess
 
         public List<Note> GetNotesOfDay(DateTime date)
         {
-            string query = $"SELECT *  from dbo.Note WHERE Note_date=@Note_date";
-            return LoadData(query, date);
+            if (date.ToShortDateString() != curTime.ToShortDateString())
+            {
+                string query = $"SELECT * from dbo.Note WHERE Note_date=@Note_date";
+                notesSelectDay = LoadData(query, date);
+                curTime = date;
+
+                return new List<Note>(notesSelectDay);
+            }
+
+            return new List<Note>(notesSelectDay);
         }
+
         public List<Note> GetNotesOfDays(DateTime dateBegin, DateTime dateEnd)
         {
-            string query = $"SELECT *  from dbo.Note WHERE Note_date >= @Note_dateBegin" +
+            string query = $"SELECT * from dbo.Note WHERE Note_date >= @Note_dateBegin" +
                 $" and Note_date <= @Note_dateEnd";
             return LoadData(query, dateBegin, dateEnd);
         }
 
         public List<Note> GetAllNotes()
         {
-            string query = $"SELECT *  from dbo.Note";
+            string query = $"SELECT * from dbo.Note";
             return LoadData(query);
         }
 
+        public async void AddNoteAsync(Note note)
+        {
+            int idNewNote = GetCountNotes() + 1;
+
+            string query = $"Insert Into dbo.Note (Id_note, Note_date, Id_type_job, Id_relevance, Id_progress, Time_start, Time_finish)" +
+                $" values (@Id_note, @Note_date, @Id_type_job, @Id_relevance, @Id_progress, @Time_start, @Time_finish)";
+            
+            if (note.NoteDate.ToShortDateString() == curTime.ToShortDateString())
+            {
+                notesSelectDay.Add(note);
+            }
+
+            await Task.Run(() => DumpData(query, note, idNewNote));
+        }
         public void AddNote(Note note)
         {
             int idNewNote = GetCountNotes() + 1;
+
             string query = $"Insert Into dbo.Note (Id_note, Note_date, Id_type_job, Id_relevance, Id_progress, Time_start, Time_finish)" +
                 $" values (@Id_note, @Note_date, @Id_type_job, @Id_relevance, @Id_progress, @Time_start, @Time_finish)";
 
+            if (note.NoteDate.ToShortDateString() == curTime.ToShortDateString())
+            {
+                notesSelectDay.Add(note);
+            }
+
             DumpData(query, note, idNewNote);
         }
-
-        public void UpdateNote(Note note)
+        public async void UpdateNoteAsync(Note note)
         {
             string query = $"Update dbo.Note " +
                 $" SET Note_date=@Note_date, " +
@@ -63,21 +96,35 @@ namespace Diary.DataAccess
                 $" Id_progress=@Id_progress, Time_start=@Time_start, Time_finish=@Time_finish" +
                 $" WHERE Id_note=@Id_note";
 
-            DumpData(query, note, note.IdNote);
+            await Task.Run(() => DumpData(query, note, note.IdNote));
         }
 
         public void RemoveNote(Note note)
         {
             string query = $"DELETE from dbo.Note WHERE Id_note=@Id_note";
 
+            curTime = new DateTime();
+
             DumpData(query, note.IdNote);
         }
 
+        public async void RemoveNoteAsync(Note note)
+        {
+            string query = $"DELETE from dbo.Note WHERE Id_note=@Id_note";
+
+            await Task.Run(() => DumpData(query, note.IdNote));
+        }
         public void RemoveNotes(DateTime date)
         {
             string query = $"DELETE from dbo.Note WHERE Note_date=@Note_date";
 
             DumpData(query, date);
+        }
+        public async void RemoveNotesAsync(DateTime date)
+        {
+            string query = $"DELETE from dbo.Note WHERE Note_date=@Note_date";
+
+            await Task.Run(() => DumpData(query, date));
         }
 
         #endregion // Public methods

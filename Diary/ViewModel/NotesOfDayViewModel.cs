@@ -71,17 +71,13 @@ namespace Diary.ViewModel
 
             foreach (var note in mainWindowViewModel.NoteRepository.GetNotesOfDay(mainWindowViewModel.SelectedDate))
             {
-                if (note.NoteDate.Date == mainWindowViewModel.SelectedDate.Date)
-                {
-                    NoteViewModel _noteVM = new NoteViewModel(
-                            note: note,
-                            noteRepository: mainWindowViewModel.NoteRepository,
-                            selectedDate: mainWindowViewModel.SelectedDate );
-                    _noteVM.UpdateWorkstapeNotify += mainWindowViewModel.SetListNotesViewOnWorkspace;
-                    _noteVM.ChangeNoteNotify += mainWindowViewModel.ChangeNote;
-                    NoteViewModels.Add(_noteVM);
-                        
-                }
+                NoteViewModel _noteVM = new NoteViewModel(
+                        note: note,
+                        noteRepository: mainWindowViewModel.NoteRepository,
+                        selectedDate: mainWindowViewModel.SelectedDate );
+                _noteVM.UpdateWorkstapeNotify += mainWindowViewModel.SetListNotesViewOnWorkspace;
+                _noteVM.ChangeNoteNotify += mainWindowViewModel.ChangeNote;
+                NoteViewModels.Add(_noteVM);
             }
         }
 

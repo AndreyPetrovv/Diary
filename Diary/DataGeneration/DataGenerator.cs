@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using Diary.DataAccess;
 using Diary.Model;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Diary.DataGeneration
 {
@@ -10,7 +12,15 @@ namespace Diary.DataGeneration
     {
         #region Public methods
 
-        public void GenerateNotes(
+        public async void GenerateNotesAsync(
+            NoteRepository noteRepository,
+            int countNotes
+            )
+        {
+            await Task.Run(() => GenerateNotes(noteRepository, countNotes));
+        }
+
+        void GenerateNotes(
             NoteRepository noteRepository,
             int countNotes
             )

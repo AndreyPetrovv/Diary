@@ -19,7 +19,7 @@ namespace Diary.Model
         #region State Properties
 
         public int IdTypeJob { get; set; }
-
+        
         public string NameTypeJob { get; set; }
 
         #endregion // State Properties

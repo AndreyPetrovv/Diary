@@ -259,11 +259,11 @@ namespace Diary.ViewModel
         {
             if (_note.IdNote == -1)
             {
-                noteRepository.AddNote(_note);
+                noteRepository.AddNoteAsync(_note);
             }
             else
             {
-                noteRepository.UpdateNote(_note);
+                noteRepository.UpdateNoteAsync(_note);
             }
 
             UpdateWorkstapeNotify?.Invoke();

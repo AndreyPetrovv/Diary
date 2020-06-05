@@ -88,6 +88,7 @@ namespace Diary.Model
             }
             return true;
         }
+
         public bool ValidateRelevance()
         {
             if (relevance == null)
@@ -96,6 +97,7 @@ namespace Diary.Model
             }
             return true;
         }
+
         public bool ValidateProgress()
         {
             if (progress == null)
@@ -104,6 +106,7 @@ namespace Diary.Model
             }
             return true;
         }
+
         public bool ValidateTime()
         {
             if (timeStart >= timeFinish)

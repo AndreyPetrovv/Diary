@@ -169,7 +169,7 @@ namespace Diary.ViewModel
                 return new RelayCommand(
 
                         param => {
-                            new DataGenerator().GenerateNotes(noteRepository, int.Parse((string)param));
+                            new DataGenerator().GenerateNotesAsync(noteRepository, int.Parse((string)param));
                             this.SetListNotesViewOnWorkspace();
                         },
                         param => isConnectToDB
