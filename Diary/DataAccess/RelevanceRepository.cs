@@ -32,7 +32,6 @@ namespace Diary.DataAccess
 
         #endregion // Constructor
 
-
         #region Public methods
 
         public List<Relevance> GetAllRelevances()

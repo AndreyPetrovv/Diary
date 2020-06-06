@@ -16,8 +16,8 @@ namespace Diary.ViewModel
 
         MainWindowViewModel mainWindowViewModel;
 
-        public delegate void AccountHandler(BaseViewModel baseViewModel);
-        public event AccountHandler Notify;
+        public delegate void UpdateWorkstapeHandler(BaseViewModel baseViewModel);
+        public event UpdateWorkstapeHandler UpdateWorkstapeNotify;
 
         #endregion // Fields
 
@@ -62,7 +62,7 @@ namespace Diary.ViewModel
             NoteViewModel workspace = new NoteViewModel(note, mainWindowViewModel.NoteRepository, mainWindowViewModel.SelectedDate);
             workspace.UpdateWorkstapeNotify += mainWindowViewModel.SetListNotesViewOnWorkspace;
 
-            Notify?.Invoke(workspace);
+            UpdateWorkstapeNotify?.Invoke(workspace);
         }
 
         void UpdateNoteViewModels()

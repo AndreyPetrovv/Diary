@@ -83,9 +83,8 @@ namespace Diary.ViewModel
 
         #region Public methods
 
-        public void ChangeNote()
+        public void ChangeNote(NoteViewModel workspace)
         {
-            BaseViewModel workspace = (workspaceViewModel.CurrentContentVM as NotesOfDayViewModel).SelectedNoteViewModel;
             if (workspace != null)
             {
                 (workspace as NoteViewModel).UpdateWorkstapeNotify += SetListNotesViewOnWorkspace;
@@ -100,7 +99,7 @@ namespace Diary.ViewModel
         public void SetListNotesViewOnWorkspace()
         {
             NotesOfDayViewModel workspace = new NotesOfDayViewModel(this);
-            workspace.Notify += UpdateWorkspaceViewModel;
+            workspace.UpdateWorkstapeNotify += UpdateWorkspaceViewModel;
             UpdateWorkspaceViewModel(workspace);
         }
 

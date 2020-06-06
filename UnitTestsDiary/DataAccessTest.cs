@@ -3,6 +3,7 @@ using Diary.DataAccess;
 using Diary.Model;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Data.SqlClient;
 
 namespace UnitTestsDiary
@@ -143,6 +144,23 @@ namespace UnitTestsDiary
             NoteRepository repository = new NoteRepository(resConnect);
 
             Assert.ThrowsException<ArgumentNullException>(() => repository.AddNote(null));
+        }
+
+        [TestMethod]
+        public async Task AddNoteAsyncTest()
+        {
+            NoteRepository repository = new NoteRepository(resConnect);
+
+            repository.AddNoteAsync(null);
+        }
+
+        [TestMethod]
+        public void UpdateNoteTest()
+        {
+            NoteRepository repository = new NoteRepository(resConnect);
+
+            Assert.ThrowsException<ArgumentNullException>(() => repository.UpdateNote(null));
+
         }
 
         [TestMethod]

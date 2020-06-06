@@ -14,7 +14,7 @@ namespace Diary.DataAccess
 
         string connectionString;
 
-        DateTime currTime;
+        DateTime currDate;
 
         List<Note> notesSelectDay;
 
@@ -43,11 +43,11 @@ namespace Diary.DataAccess
 
         public List<Note> GetNotesOfDay(DateTime date)
         {
-            if (date.ToShortDateString() != currTime.ToShortDateString())
+            if (date.ToShortDateString() != currDate.ToShortDateString())
             {
                 string query = $"SELECT * from dbo.Note WHERE Note_date=@Note_date";
                 notesSelectDay = LoadData(query, date);
-                currTime = date;
+                currDate = date;
 
                 return new List<Note>(notesSelectDay);
             }
@@ -77,7 +77,7 @@ namespace Diary.DataAccess
                 string query = $"Insert Into dbo.Note (Id_note, Note_date, Id_type_job, Id_relevance, Id_progress, Time_start, Time_finish)" +
                     $" values (@Id_note, @Note_date, @Id_type_job, @Id_relevance, @Id_progress, @Time_start, @Time_finish)";
 
-                if (note.NoteDate.ToShortDateString() == currTime.ToShortDateString())
+                if (note.NoteDate.ToShortDateString() == currDate.ToShortDateString())
                 {
                     notesSelectDay.Add(note);
                 }
@@ -98,7 +98,7 @@ namespace Diary.DataAccess
                 string query = $"Insert Into dbo.Note (Id_note, Note_date, Id_type_job, Id_relevance, Id_progress, Time_start, Time_finish)" +
                     $" values (@Id_note, @Note_date, @Id_type_job, @Id_relevance, @Id_progress, @Time_start, @Time_finish)";
 
-                if (note.NoteDate.ToShortDateString() == currTime.ToShortDateString())
+                if (note.NoteDate.ToShortDateString() == currDate.ToShortDateString())
                 {
                     notesSelectDay.Add(note);
                 }
@@ -110,7 +110,7 @@ namespace Diary.DataAccess
                 throw new ArgumentNullException("note is null");
             }
         }
-        public async void UpdateNoteAsync(Note note)
+        public void UpdateNote(Note note)
         {
             if (note != null)
             {
@@ -120,7 +120,7 @@ namespace Diary.DataAccess
                     $" Id_progress=@Id_progress, Time_start=@Time_start, Time_finish=@Time_finish" +
                     $" WHERE Id_note=@Id_note";
 
-                await Task.Run(() => DumpData(query, note, note.IdNote));
+               DumpData(query, note, note.IdNote);
             }
             else
             {
@@ -134,7 +134,7 @@ namespace Diary.DataAccess
             {
                 string query = $"DELETE from dbo.Note WHERE Id_note=@Id_note";
 
-                currTime = new DateTime();
+                currDate = new DateTime();
 
                 DumpData(query, note.IdNote);
             }

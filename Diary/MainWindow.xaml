@@ -52,6 +52,7 @@
             Grid.Column="1" 
             Style="{StaticResource StyleCalendar}"
             FirstDayOfWeek="Monday" 
+            Focusable="True"
             SelectedDate="{Binding SelectedDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="SelectedDatesChanged">

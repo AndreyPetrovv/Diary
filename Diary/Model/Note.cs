@@ -49,7 +49,7 @@ namespace Diary.Model
 
         #endregion // Constructor
 
-        #region State Properties
+        #region Properties
 
         public int IdNote { get => idNote; private set => idNote = value; }
 
@@ -65,8 +65,9 @@ namespace Diary.Model
 
         public TimeSpan TimeFinish { get => timeFinish; set => timeFinish = value; }
 
-        #endregion // State Properties
+        #endregion // Properties
 
+        #region Public methods
         public bool IsValid
         {
             get
@@ -115,5 +116,7 @@ namespace Diary.Model
             }
             return true;
         }
+
+        #endregion // Public methods
     }
 }

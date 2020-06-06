@@ -16,9 +16,11 @@ namespace Diary.ViewModel
         Note _note;
         DateTime selectedDate;
 
-        public delegate void AccountHandler();
-        public event AccountHandler UpdateWorkstapeNotify;
-        public event AccountHandler ChangeNoteNotify;
+        public delegate void UpdateWorkstapeHandler();
+        public event UpdateWorkstapeHandler UpdateWorkstapeNotify;
+
+        public delegate void ChangeNoteHandler(NoteViewModel noteViewModel);
+        public event ChangeNoteHandler ChangeNoteNotify;
 
         NoteRepository noteRepository;
         TypeJobRepository typeJobRepository;
@@ -252,7 +254,7 @@ namespace Diary.ViewModel
         
         void ChangeNote()
         {
-            ChangeNoteNotify?.Invoke();
+            ChangeNoteNotify?.Invoke(this);
         }
 
         void Save()
@@ -263,7 +265,7 @@ namespace Diary.ViewModel
             }
             else
             {
-                noteRepository.UpdateNoteAsync(_note);
+                noteRepository.UpdateNote(_note);
             }
 
             UpdateWorkstapeNotify?.Invoke();
