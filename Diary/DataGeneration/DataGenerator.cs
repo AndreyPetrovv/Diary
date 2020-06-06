@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using Diary.DataAccess;
 using Diary.Model;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Diary.DataGeneration
@@ -17,7 +15,14 @@ namespace Diary.DataGeneration
             int countNotes
             )
         {
-            await Task.Run(() => GenerateNotes(noteRepository, countNotes));
+            if(noteRepository != null && countNotes > 0)
+            {
+                await Task.Run(() => GenerateNotes(noteRepository, countNotes));
+            }
+            else
+            {
+                throw new ArgumentException("noteRepository is null or countNotes <0");
+            }
         }
 
         void GenerateNotes(
@@ -26,7 +31,7 @@ namespace Diary.DataGeneration
             )
         {
             Random saintRandom = new Random();
-            DateTime dateNote = DateTime.Now.AddDays(-3);
+            DateTime dateNote = DateTime.Now.AddDays(-1);
 
             List<TypeJob> typeJobs = new TypeJobRepository(Properties.Resources.ConnectCommand).GetAllTypeJobs();
             List<Relevance> relevances = new RelevanceRepository(Properties.Resources.ConnectCommand).GetAllRelevances();

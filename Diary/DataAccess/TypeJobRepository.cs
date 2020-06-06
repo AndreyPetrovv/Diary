@@ -18,8 +18,15 @@ namespace Diary.DataAccess
 
         public TypeJobRepository(string connectionString)
         {
-            CheckConnect(connectionString);
-            this.connectionString = connectionString;
+            try
+            {
+                CheckConnect(connectionString);
+                this.connectionString = connectionString;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
         #endregion // Constructor
