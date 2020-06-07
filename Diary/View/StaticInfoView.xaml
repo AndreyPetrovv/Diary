@@ -7,13 +7,22 @@
              mc:Ignorable="d" 
              d:DesignHeight="420" d:DesignWidth="400">
     <Grid>
-        <StackPanel Height="400" VerticalAlignment="Top">
+        <ScrollViewer>
+            <StackPanel  VerticalAlignment="Top">
 
-            <Label Height="30" HorizontalAlignment="Center">Value counts</Label>
-            <ListBox Height="150" ItemsSource="{Binding ValueCounts}">
-            </ListBox>
+                <Label Height="30" HorizontalAlignment="Center">Value counts</Label>
+                <ListBox Height="150" ItemsSource="{Binding ValueCounts}">
+                </ListBox>
 
-            <Label Height="30" HorizontalAlignment="Center">Mean time (Min)</Label>
+                <Label Height="30" HorizontalAlignment="Center">Times of Jobs (Min)</Label>
+                <ListBox Height="150" ItemsSource="{Binding AllTimesJobs}">
+                </ListBox>
+
+                <Label Height="30" HorizontalAlignment="Center">Mean times of Jobs in day (Min)</Label>
+                <ListBox Height="150" ItemsSource="{Binding MeanTimesJobs}">
+                </ListBox>
+
+                <Label Height="30" HorizontalAlignment="Center">Mean time (Min)</Label>
             <TextBlock Height="30" Text="{Binding MeanTime}" HorizontalAlignment="Center">
             </TextBlock>
             
@@ -26,10 +35,8 @@
             <TextBlock Height="30" Text="{Binding MinTime}" HorizontalAlignment="Center">
 
             </TextBlock>
-            
-        </StackPanel>
-
-        <Button Command="{Binding QuitCommand}" VerticalAlignment="Bottom" HorizontalAlignment="Right" Height="20" Width="80" Content="Quit"/>
-
+                <Button Command="{Binding QuitCommand}" VerticalAlignment="Bottom" HorizontalAlignment="Right" Height="20" Width="80" Content="Quit"/>
+            </StackPanel>
+            </ScrollViewer>
     </Grid>
 </UserControl>

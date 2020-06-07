@@ -15,6 +15,9 @@ namespace Diary.ViewModel
         public event AccountHandler QuitNotify;
 
         Dictionary<string, int> _valueCounts;
+        Dictionary<string, double> _allTimesJobs;
+        Dictionary<string, double> _meanTimesJobs;
+
 
         double _meanTime;
         double _maxTime;
@@ -49,6 +52,31 @@ namespace Diary.ViewModel
                 }
 
                 return _valueCounts;
+            }
+        }
+
+        public Dictionary<string, double> AllTimesJobs
+        {
+            get
+            {
+                if (_allTimesJobs == null)
+                {
+                    _allTimesJobs = CountAllTimesJobs();
+                }
+
+                return _allTimesJobs;
+            }
+        }
+        public Dictionary<string, double> MeanTimesJobs
+        {
+            get
+            {
+                if (_meanTimesJobs == null)
+                {
+                    _meanTimesJobs = CountMeanTimesJobs();
+                }
+
+                return _meanTimesJobs;
             }
         }
 
@@ -119,6 +147,64 @@ namespace Diary.ViewModel
             #endregion
 
             return typeJobsValues;
+        }
+        Dictionary<string, double> CountAllTimesJobs()
+        {
+
+            #region Init Dictionary
+
+            Dictionary<string, double> timesJobsValues = new Dictionary<string, double>();
+
+            foreach (var item in new TypeJobRepository(Properties.Resources.ConnectCommand).GetAllTypeJobs())
+            {
+                timesJobsValues.Add(item.NameTypeJob, 0);
+            }
+
+            #endregion
+
+            #region Count
+
+            foreach (var item in notes)
+            {
+                timesJobsValues[item.TypeJob.NameTypeJob] += (item.TimeFinish - item.TimeStart).TotalMinutes;
+            }
+
+            #endregion
+
+            return timesJobsValues;
+        }
+        Dictionary<string, double> CountMeanTimesJobs()
+        {
+
+            #region Init Dictionary
+
+            Dictionary<string, double> meanTimesJobsValues;
+
+            if (_allTimesJobs == null)
+            {
+                meanTimesJobsValues = CountAllTimesJobs();
+            }
+            else
+            {
+                meanTimesJobsValues = new Dictionary<string, double>(_allTimesJobs);
+
+            }
+
+            #endregion
+
+            #region Count
+
+            int countNotes = notes.Count;
+            List<string> keys = new List<string>(meanTimesJobsValues.Keys);
+
+            foreach (var key in keys)
+            {
+                meanTimesJobsValues[key] /= countNotes;
+            }
+
+            #endregion
+
+            return meanTimesJobsValues;
         }
         double CountMeanTimeJob()
         {
