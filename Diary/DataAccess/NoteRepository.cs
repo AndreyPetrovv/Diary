@@ -14,10 +14,6 @@ namespace Diary.DataAccess
 
         string connectionString;
 
-        DateTime currDate;
-
-        List<Note> notesSelectDay;
-
         #endregion // Fields
 
         #region Constructor
@@ -43,16 +39,8 @@ namespace Diary.DataAccess
 
         public List<Note> GetNotesOfDay(DateTime date)
         {
-            if (date.ToShortDateString() != currDate.ToShortDateString())
-            {
-                string query = $"SELECT * from dbo.Note WHERE Note_date=@Note_date";
-                notesSelectDay = LoadData(query, date);
-                currDate = date;
-
-                return new List<Note>(notesSelectDay);
-            }
-
-            return new List<Note>(notesSelectDay);
+            string query = $"SELECT * from dbo.Note WHERE Note_date=@Note_date";
+            return LoadData(query, date);
         }
 
         public List<Note> GetNotesOfDays(DateTime dateBegin, DateTime dateEnd)
@@ -77,11 +65,6 @@ namespace Diary.DataAccess
                 string query = $"Insert Into dbo.Note (Id_note, Note_date, Id_type_job, Id_relevance, Id_progress, Time_start, Time_finish)" +
                     $" values (@Id_note, @Note_date, @Id_type_job, @Id_relevance, @Id_progress, @Time_start, @Time_finish)";
 
-                if (note.NoteDate.ToShortDateString() == currDate.ToShortDateString())
-                {
-                    notesSelectDay.Add(note);
-                }
-
                 await Task.Run(() => DumpData(query, note, idNewNote));
             }
             else
@@ -98,10 +81,6 @@ namespace Diary.DataAccess
                 string query = $"Insert Into dbo.Note (Id_note, Note_date, Id_type_job, Id_relevance, Id_progress, Time_start, Time_finish)" +
                     $" values (@Id_note, @Note_date, @Id_type_job, @Id_relevance, @Id_progress, @Time_start, @Time_finish)";
 
-                if (note.NoteDate.ToShortDateString() == currDate.ToShortDateString())
-                {
-                    notesSelectDay.Add(note);
-                }
 
                 DumpData(query, note, idNewNote);
             }
@@ -133,8 +112,6 @@ namespace Diary.DataAccess
             if (note != null)
             {
                 string query = $"DELETE from dbo.Note WHERE Id_note=@Id_note";
-
-                currDate = new DateTime();
 
                 DumpData(query, note.IdNote);
             }

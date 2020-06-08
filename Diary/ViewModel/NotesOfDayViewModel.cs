@@ -8,7 +8,7 @@ using Diary.DataAccess;
 
 namespace Diary.ViewModel
 {
-    public class NotesOfDayViewModel: WorkspaceViewModel
+    public class NotesOfDayViewModel: BaseViewModel
     {
         #region Fields
 

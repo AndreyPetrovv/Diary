@@ -8,7 +8,7 @@ using System.ComponentModel;
 
 namespace Diary.ViewModel
 {
-    public class NoteViewModel: WorkspaceViewModel
+    public class NoteViewModel: BaseViewModel
     {
 
         #region Fields
@@ -261,7 +261,7 @@ namespace Diary.ViewModel
         {
             if (_note.IdNote == -1)
             {
-                noteRepository.AddNoteAsync(_note);
+                noteRepository.AddNote(_note);
             }
             else
             {

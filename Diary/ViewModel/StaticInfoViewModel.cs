@@ -7,7 +7,7 @@ using Diary.Model;
 
 namespace Diary.ViewModel
 {
-    public class StaticInfoViewModel: WorkspaceViewModel
+    public class StaticInfoViewModel: BaseViewModel
     {
 
         #region Fields
