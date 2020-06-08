@@ -39,15 +39,30 @@ namespace Diary.DataAccess
 
         public List<Note> GetNotesOfDay(DateTime date)
         {
-            string query = $"SELECT * from dbo.Note WHERE Note_date=@Note_date";
-            return LoadData(query, date);
+            if (date != null)
+            {
+                string query = $"SELECT * from dbo.Note WHERE Note_date=@Note_date";
+                return LoadData(query, date);
+            }
+            else
+            {
+                throw new ArgumentNullException("date is null");
+            }
         }
 
         public List<Note> GetNotesOfDays(DateTime dateBegin, DateTime dateEnd)
         {
-            string query = $"SELECT * from dbo.Note WHERE Note_date >= @Note_dateBegin" +
-                $" and Note_date <= @Note_dateEnd";
-            return LoadData(query, dateBegin, dateEnd);
+            if (dateBegin != null && dateEnd != null)
+            {
+                string query = $"SELECT * from dbo.Note WHERE Note_date >= @Note_dateBegin" +
+                    $" and Note_date <= @Note_dateEnd";
+                return LoadData(query, dateBegin, dateEnd);
+            }
+            else
+            {
+                throw new ArgumentNullException("dateBegin/dateEnd is null");
+            }
+
         }
 
         public List<Note> GetAllNotes()
@@ -122,9 +137,16 @@ namespace Diary.DataAccess
         }
         public void RemoveNotes(DateTime date)
         {
-            string query = $"DELETE from dbo.Note WHERE Note_date=@Note_date";
+            if (date != null)
+            {
+                string query = $"DELETE from dbo.Note WHERE Note_date=@Note_date";
 
-            DumpData(query, date);
+                DumpData(query, date);
+            }
+            else
+            {
+                throw new ArgumentNullException("date is null");
+            }
         }
 
         #endregion // Public methods
@@ -133,6 +155,9 @@ namespace Diary.DataAccess
 
         void CheckConnect(string connectionString)
         {
+            RemoveNote(null);
+
+
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();

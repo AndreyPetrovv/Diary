@@ -49,7 +49,7 @@ namespace Diary.ViewModel
                 OnPropertyChanged("SelectedNoteViewModel");
             }
         }
-        public ObservableCollection<NoteViewModel> NoteViewModels { get; set; }
+        public ObservableCollection<NoteViewModel> NoteViewModels { get; private set; }
 
         #endregion // Properties
 

@@ -11,6 +11,7 @@ namespace Diary.ViewModel
     {
 
         #region Fields
+
         public delegate void AccountHandler();
         public event AccountHandler QuitNotify;
 
@@ -263,11 +264,6 @@ namespace Diary.ViewModel
             return minTimeJob;
         }
 
-        void QuitView()
-        {
-            QuitNotify?.Invoke();
-        }
-
         #endregion // Private methods
 
         #region Commands
@@ -277,7 +273,7 @@ namespace Diary.ViewModel
             get
             {
                 return new RelayCommand(
-                        param => this.QuitView()
+                        param => QuitNotify?.Invoke()
                         );
             }
         }

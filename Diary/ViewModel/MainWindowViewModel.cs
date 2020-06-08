@@ -150,17 +150,6 @@ namespace Diary.ViewModel
             }
         }
 
-        public RelayCommand UpdateWorckspaceCommand
-        {
-            get
-            {
-                return new RelayCommand(
-                        param => this.SetListNotesViewOnWorkspace(),
-                        param => IsConnectToDB
-                    );
-            }
-        }
-
         public RelayCommand GenerateDataCommand
         {
             get

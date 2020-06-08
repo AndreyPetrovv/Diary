@@ -25,11 +25,16 @@ namespace Diary.DataGeneration
             }
         }
 
-        void GenerateNotes(
+        public void GenerateNotes(
             NoteRepository noteRepository,
             int countNotes
             )
         {
+            if (noteRepository == null || countNotes < 1)
+            {
+                throw new ArgumentException("noteRepository is null or countNotes <0");
+            }
+
             Random saintRandom = new Random();
             DateTime dateNote = DateTime.Now.AddDays(-1);
 

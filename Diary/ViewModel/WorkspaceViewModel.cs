@@ -9,8 +9,8 @@ namespace Diary.ViewModel
     public class WorkspaceViewModel: BaseViewModel
     {
 
-        object currentContentVM;
-        public object CurrentContentVM
+        BaseViewModel currentContentVM;
+        public BaseViewModel CurrentContentVM
         {
             get
             { 
