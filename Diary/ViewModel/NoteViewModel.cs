@@ -61,34 +61,6 @@ namespace Diary.ViewModel
         #endregion // Constructor
 
         #region State Properties
-        
-        public TypeJob NoteTypeJob {
-            get
-            {
-                return _note.TypeJob;
-            }
-            set
-            {
-
-                _note.TypeJob = value;
-
-                OnPropertyChanged("NoteTypeJob");
-            }
-        }
-        public Relevance NoteRelevance
-        {
-            get
-            {
-                return _note.Relevance;
-            }
-            set
-            {
-
-                _note.Relevance = value;
-
-                OnPropertyChanged("NoteRelevance");
-            }
-        }
         public Progress NoteProgress
         {
             get
@@ -188,26 +160,6 @@ namespace Diary.ViewModel
 
         #region Presentation Properties
 
-        public TypeJob[] NoteTypeJobs
-        {
-            get
-            {
-                if (_noteTypeJobs == null)
-                {
-                    _noteTypeJobs = new TypeJob[typeJobRepository.GetAllTypeJobs().Count];
-
-                    int i = 0;
-
-                    foreach (var item in typeJobRepository.GetAllTypeJobs())
-                    {
-                        _noteTypeJobs[i] = item;
-                        i++;
-                    }
-                }
-                return _noteTypeJobs;
-            }
-        }
-
         public Relevance[] NoteRelevances
         {
             get
@@ -225,26 +177,6 @@ namespace Diary.ViewModel
                     }
                 }
                 return _noteRelevances;
-            }
-        }
-
-        public Progress[] NoteProgresses
-        {
-            get
-            {
-                if (_noteProgresses == null)
-                {
-                    _noteProgresses = new Progress[progressRepository.GetAllProgresses().Count];
-
-                    int i = 0;
-
-                    foreach (var item in progressRepository.GetAllProgresses())
-                    {
-                        _noteProgresses[i] = item;
-                        i++;
-                    }
-                }
-                return _noteProgresses;
             }
         }
 

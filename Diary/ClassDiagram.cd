@@ -1,158 +1,184 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Class Name="Diary.Properties.Resources" Collapsed="true">
-    <Position X="11.25" Y="3.5" Width="1.5" />
+<ClassDiagram MajorVersion="1" MinorVersion="1" GroupingSetting="Access" MembersFormat="FullSignature">
+  <Class Name="Diary.Properties.Resources">
+    <Position X="13.5" Y="11" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAEAAQQAAAACAgAAAAABEAAAAQAAAAAAAAAAAAAAAIA=</HashCode>
     </TypeIdentifier>
   </Class>
-  <Class Name="Diary.DataAccess.NoteRepository" Collapsed="true">
-    <Position X="13" Y="1.5" Width="1.5" />
+  <Class Name="Diary.DataAccess.NoteRepository">
+    <Position X="20.5" Y="4.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>IEAAAAAAAABQAAkAACgAACEAAAAEAQAAAAAAgABIAAA=</HashCode>
+      <HashCode>IEAAAAAAAABQAAkAACAAACEAAAAEAQAAAAAAAABIAAA=</HashCode>
       <FileName>DataAccess\NoteRepository.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Diary.DataAccess.ProgressRepository" Collapsed="true">
-    <Position X="11.25" Y="2.5" Width="1.5" />
+  <Class Name="Diary.DataAccess.ProgressRepository">
+    <Position X="18.75" Y="4.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAABQAAgAAAAAAAAAAAAAAAAAAAAAACCAAAA=</HashCode>
       <FileName>DataAccess\ProgressRepository.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Diary.DataAccess.RelevanceRepository" Collapsed="true">
-    <Position X="16.5" Y="2.5" Width="1.5" />
+  <Class Name="Diary.DataAccess.RelevanceRepository">
+    <Position X="22.25" Y="7.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAABQAAgAAAggAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>DataAccess\RelevanceRepository.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Diary.DataAccess.TypeJobRepository" Collapsed="true">
-    <Position X="16.5" Y="3.5" Width="1.5" />
+  <Class Name="Diary.DataAccess.TypeJobRepository">
+    <Position X="22.25" Y="4.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAABQAAgAAAAAAAAAAAAAABAAAAABAAAAAAA=</HashCode>
       <FileName>DataAccess\TypeJobRepository.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Diary.DataGeneration.DataGenerator" Collapsed="true">
-    <Position X="13" Y="0.5" Width="1.5" />
+  <Class Name="Diary.DataGeneration.DataGenerator">
+    <Position X="20" Y="11.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAABAAAAABAAAAAAAAAAAAAAAAAAAAAAAgAAAA=</HashCode>
       <FileName>DataGeneration\DataGenerator.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Diary.Model.Note" Collapsed="true">
-    <Position X="11.25" Y="1.5" Width="1.5" />
+  <Class Name="Diary.Model.Note">
+    <Position X="14.75" Y="4" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAACAAAAiAACAAAgAgQAAAAACAAIQIJQAECCUAAA=</HashCode>
       <FileName>Model\Note.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Diary.Model.Progress" Collapsed="true">
-    <Position X="16.5" Y="1.5" Width="1.5" />
+  <Class Name="Diary.Model.Progress">
+    <Position X="13" Y="4" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAgAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAA=</HashCode>
       <FileName>Model\Progress.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Diary.Model.Relevance" Collapsed="true">
-    <Position X="14.75" Y="2.5" Width="1.5" />
+  <Class Name="Diary.Model.Relevance">
+    <Position X="16.5" Y="4" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAIBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Model\Relevance.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Diary.Model.TypeJob" Collapsed="true">
-    <Position X="14.75" Y="3.5" Width="1.5" />
+  <Class Name="Diary.Model.TypeJob">
+    <Position X="13" Y="6.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAEAAAAAA=</HashCode>
       <FileName>Model\TypeJob.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Diary.View.ListNotesView" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="14.75" Y="0.5" Width="1.5" />
+  <Class Name="Diary.View.ListNotesView" BaseTypeListCollapsed="true">
+    <Position X="20" Y="2" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>View\ListNotesView.xaml.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
-  <Class Name="Diary.View.NoteView" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="14.75" Y="1.5" Width="1.5" />
+  <Class Name="Diary.View.NoteView" BaseTypeListCollapsed="true">
+    <Position X="18" Y="2" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>View\NoteView.xaml.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
-  <Class Name="Diary.View.StaticInfoView" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="13" Y="3.5" Width="1.5" />
+  <Class Name="Diary.View.StaticInfoView" BaseTypeListCollapsed="true">
+    <Position X="16" Y="2" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>View\StaticInfoView.xaml.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
-  <Class Name="Diary.ViewModel.BaseViewModel" Collapsed="true">
-    <Position X="5.25" Y="0.5" Width="1.5" />
+  <Class Name="Diary.ViewModel.BaseViewModel">
+    <Position X="5.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAACAAAAAAAAAAIAAAAAAAgAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>ViewModel\BaseViewModel.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="Diary.ViewModel.MainWindowViewModel" Collapsed="true">
-    <Position X="8.75" Y="1.75" Width="1.5" />
+  <Class Name="Diary.ViewModel.MainWindowViewModel">
+    <Position X="10.25" Y="2.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>ABAIAAAAAAIABAQCEAQAAgAAABAAAAAQEAAABAAAAAI=</HashCode>
       <FileName>ViewModel\MainWindowViewModel.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Diary.ViewModel.NotesOfDayViewModel" Collapsed="true">
-    <Position X="2" Y="3.25" Width="1.5" />
+  <Class Name="Diary.ViewModel.NotesOfDayViewModel">
+    <Position X="1.5" Y="2.5" Width="1.5" />
+    <NestedTypes>
+      <Delegate Name="Diary.ViewModel.NotesOfDayViewModel.UpdateWorkstapeHandler" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>ViewModel\NotesOfDayViewModel.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+    </NestedTypes>
     <TypeIdentifier>
       <HashCode>ACAQAAAAAAACAAAAAAQBAAAEAAAAgAAAAAAAAAAQAAA=</HashCode>
       <FileName>ViewModel\NotesOfDayViewModel.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Diary.ViewModel.NoteViewModel" Collapsed="true">
-    <Position X="4.25" Y="3.25" Width="1.5" />
+  <Class Name="Diary.ViewModel.NoteViewModel">
+    <Position X="5.75" Y="2.5" Width="1.5" />
+    <NestedTypes>
+      <Delegate Name="Diary.ViewModel.NoteViewModel.UpdateWorkstapeHandler" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>ViewModel\NoteViewModel.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="Diary.ViewModel.NoteViewModel.ChangeNoteHandler" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>ViewModel\NoteViewModel.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+    </NestedTypes>
     <TypeIdentifier>
-      <HashCode>IAEQAIBBECACREACAAAABBACAIEUQAAUAAIEkAAEIAg=</HashCode>
+      <HashCode>AAEQAIBBECACREACAAAABBACAIEUAAAUAAIAkAAEIAg=</HashCode>
       <FileName>ViewModel\NoteViewModel.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Diary.ViewModel.StaticInfoViewModel" Collapsed="true">
-    <Position X="6.5" Y="3.25" Width="1.5" />
+  <Class Name="Diary.ViewModel.StaticInfoViewModel">
+    <Position X="8" Y="2.5" Width="1.5" />
+    <NestedTypes>
+      <Delegate Name="Diary.ViewModel.StaticInfoViewModel.AccountHandler" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>ViewModel\StaticInfoViewModel.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+    </NestedTypes>
     <TypeIdentifier>
       <HashCode>AEACEEACAAlAAFAACBAAAAAEAAABAAAIAQAAAEAAZAA=</HashCode>
       <FileName>ViewModel\StaticInfoViewModel.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Diary.ViewModel.WorkspaceViewModel" Collapsed="true">
-    <Position X="4.25" Y="1.75" Width="1.5" />
+  <Class Name="Diary.ViewModel.WorkspaceViewModel">
+    <Position X="3.5" Y="2.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAgAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAA=</HashCode>
       <FileName>ViewModel\WorkspaceViewModel.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Diary.App" Collapsed="true">
-    <Position X="11.25" Y="0.5" Width="1.5" />
+  <Class Name="Diary.App">
+    <Position X="15.25" Y="11" Width="1.5" />
     <TypeIdentifier>
       <HashCode>IAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>App.xaml.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Diary.MainWindow" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="16.5" Y="0.5" Width="1.5" />
+  <Class Name="Diary.MainWindow" BaseTypeListCollapsed="true">
+    <Position X="18" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>MainWindow.xaml.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
-  <Class Name="Diary.RelayCommand" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="13" Y="2.5" Width="1.5" />
+  <Class Name="Diary.RelayCommand" BaseTypeListCollapsed="true">
+    <Position X="10.25" Y="7.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAACAAQAAEAEAABAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>RelayCommand.cs</FileName>
