@@ -24,7 +24,7 @@ namespace Diary.ViewModel
         protected bool CheckTimeNote(DateTime selectedDate)
         {
 
-            if (selectedDate.Date == DateTime.Now.Date)
+            if (selectedDate.ToShortDateString() == DateTime.Now.ToShortDateString())
             {
                 return true;
             }

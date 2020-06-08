@@ -155,9 +155,6 @@ namespace Diary.DataAccess
 
         void CheckConnect(string connectionString)
         {
-            RemoveNote(null);
-
-
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();

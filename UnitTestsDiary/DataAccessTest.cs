@@ -183,5 +183,103 @@ namespace UnitTestsDiary
             Assert.AreEqual(contNotes, 0);
         }
 
+        [TestMethod]
+        public void GetAllProgressesTest()
+        {
+
+            ProgressRepository repository = new ProgressRepository(resConnect);
+            List<Progress> loadList = new List<Progress>();
+            string query = "SELECT *  from dbo.Progress";
+
+            using (SqlConnection connection =
+               new SqlConnection(resConnect))
+            {
+                SqlCommand command = new SqlCommand(query, connection);
+
+                connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    loadList.Add(
+                        new Progress(
+                                idProgress: (int)reader[0],
+                                statusProgress: (string)reader[1]
+                            )
+                        );
+                }
+                reader.Close();
+            }
+
+            int count = repository.GetAllProgresses().Count;
+
+            Assert.AreEqual(count, loadList.Count);
+        }
+
+        [TestMethod]
+        public void GetAllRelevancesTest()
+        {
+
+            RelevanceRepository repository = new RelevanceRepository(resConnect);
+            string query = "SELECT *  from dbo.Relevance";
+            List<Relevance> loadList = new List<Relevance>();
+
+            using (SqlConnection connection =
+               new SqlConnection(resConnect))
+            {
+                SqlCommand command = new SqlCommand(query, connection);
+
+                connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    loadList.Add(
+                        new Relevance(
+                                idRelevance: (int)reader[0],
+                                levelRelevance: (string)reader[1]
+                            )
+                        );
+                }
+                reader.Close();
+            }
+
+            int count = repository.GetAllRelevances().Count;
+
+            Assert.AreEqual(count, loadList.Count);
+        }
+        [TestMethod]
+        public void GetAllTypeJobsTest()
+        {
+
+            TypeJobRepository repository = new TypeJobRepository(resConnect);
+            string query = "SELECT *  from dbo.Type_job";
+
+            List<TypeJob> loadList = new List<TypeJob>();
+
+            using (SqlConnection connection =
+               new SqlConnection(resConnect))
+            {
+                SqlCommand command = new SqlCommand(query, connection);
+
+                connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    loadList.Add(
+                        new TypeJob(
+                                idTypeJob: (int)reader[0],
+                                nameTypeJob: (string)reader[1]
+                            )
+                        );
+                }
+                reader.Close();
+            }
+
+            int count = repository.GetAllTypeJobs().Count;
+
+            Assert.AreEqual(count, loadList.Count);
+        }
     }
 }

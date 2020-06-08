@@ -12,7 +12,7 @@ namespace UnitTestsDiary
         string resConnect = @"1Data Source=DESKTOP-EJ5LSTR\SQLEXPRESS; Initial Catalog=diary; Integrated Security=true;";
 
         [TestMethod]
-        public void GenerateNotesAsyncTest()
+        public void ConstructorMainWindowViewModelTest()
         {
             MainWindowViewModel mainWindowViewModel = new MainWindowViewModel(resConnect);
 

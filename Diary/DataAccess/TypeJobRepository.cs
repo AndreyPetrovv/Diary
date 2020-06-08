@@ -58,6 +58,7 @@ namespace Diary.DataAccess
                 connection.Close();
             }
         }
+
         List<TypeJob> LoadData(string query)
         {
 

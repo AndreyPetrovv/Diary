@@ -51,7 +51,10 @@ namespace Diary.ViewModel
                 if(workspaceViewModel == null && IsConnectToDB)
                 {
                     workspaceViewModel = new WorkspaceViewModel();
-                    workspaceViewModel.CurrentContentVM = new NotesOfDayViewModel(this);
+                    NotesOfDayViewModel notesOfDayView = new NotesOfDayViewModel(this);
+                    notesOfDayView.UpdateWorkstapeNotify += UpdateWorkspaceViewModel;
+                    workspaceViewModel.CurrentContentVM = notesOfDayView;
+
                 }
 
                 return workspaceViewModel;
