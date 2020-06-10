@@ -72,7 +72,7 @@ namespace Diary.ViewModel
 
                 _note.TypeJob = value;
 
-                OnPropertyChanged("NoteTypeJob");
+                OnPropertyChanged();
             }
         }
         public Relevance NoteRelevance
@@ -86,7 +86,7 @@ namespace Diary.ViewModel
 
                 _note.Relevance = value;
 
-                OnPropertyChanged("NoteRelevance");
+                OnPropertyChanged();
             }
         }
         public Progress NoteProgress
@@ -100,7 +100,7 @@ namespace Diary.ViewModel
 
                 _note.Progress = value;
 
-                OnPropertyChanged("NoteProgress");
+                OnPropertyChanged();
             }
         }
         public string TimeStartHours {
@@ -118,7 +118,7 @@ namespace Diary.ViewModel
                     }
                     timeStartHours = value;
                 }
-                OnPropertyChanged("TimeStartHours");
+                OnPropertyChanged();
             }
         }
         public string TimeStartMinutes
@@ -137,7 +137,7 @@ namespace Diary.ViewModel
                     }
                     timeStartMinutes = value;
                 }
-                OnPropertyChanged("TimeStartMinutes");
+                OnPropertyChanged();
             }
         }
         public string TimeFinishHours
@@ -156,7 +156,7 @@ namespace Diary.ViewModel
                     }
                     timeFinishHours = value;
                 }
-                OnPropertyChanged("TimeFinishHours");
+                OnPropertyChanged();
             }
         }
         public string TimeFinishMinutes
@@ -175,7 +175,7 @@ namespace Diary.ViewModel
                     }
                     timeFinishMinutes = value;
                 }
-                OnPropertyChanged("TimeFinishMinutes");
+                OnPropertyChanged();
             }
         }
 

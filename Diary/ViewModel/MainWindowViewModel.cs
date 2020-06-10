@@ -32,7 +32,7 @@ namespace Diary.ViewModel
             }
             catch
             {
-                MessageBox.Show("Can't conntect to data base");
+                MessageBox.Show("Can't connect to database");
                 IsConnectToDB = false;
             }
         }
@@ -62,7 +62,7 @@ namespace Diary.ViewModel
             set
             {
                 workspaceViewModel = value;
-                OnPropertyChanged("WorksapceViewModel");
+                OnPropertyChanged();
             }
         }
 

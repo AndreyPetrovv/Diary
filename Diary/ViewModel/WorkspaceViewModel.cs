@@ -20,7 +20,7 @@ namespace Diary.ViewModel
             {
                 currentContentVM = value;
 
-                OnPropertyChanged("CurrentContentVM");
+                OnPropertyChanged();
             }
         }
 
