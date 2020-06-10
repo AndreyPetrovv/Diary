@@ -12,7 +12,7 @@ namespace Diary.Model
         #region Fields
 
         int idNote = -1;
-        DateTime noteData;
+        DateTime noteDate;
         TypeJob typeJob;
         Relevance relevance;
         Progress progress;
@@ -38,22 +38,22 @@ namespace Diary.Model
             TimeSpan timeFinish
             )
         {
-            this.idNote = idNote;
-            this.noteData = noteData;
+            this.IdNote = idNote;
+            this.NoteDate = noteData;
             this.TypeJob = typeJob;
             this.Relevance = relevance;
             this.Progress = progress;
-            this.timeStart = timeStart;
-            this.timeFinish = timeFinish;
+            this.TimeStart = timeStart;
+            this.TimeFinish = timeFinish;
         }
 
         #endregion // Constructor
 
         #region Properties
 
-        public int IdNote { get => idNote; private set => idNote = value; }
+        public int IdNote { get => idNote; set => idNote = value; }
 
-        public DateTime NoteDate { get => noteData; set => noteData = value; }
+        public DateTime NoteDate { get => noteDate; set => noteDate = value; }
 
         public TypeJob TypeJob { get => typeJob; set => typeJob = value; }
 

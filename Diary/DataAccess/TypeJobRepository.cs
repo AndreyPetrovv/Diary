@@ -18,15 +18,13 @@ namespace Diary.DataAccess
 
         public TypeJobRepository(string connectionString)
         {
-            try
+            if (!CheckConnect(connectionString))
             {
-                CheckConnect(connectionString);
-                this.connectionString = connectionString;
+                throw new Exception();
+
             }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+
+            this.connectionString = connectionString;
         }
 
         #endregion // Constructor
@@ -37,66 +35,53 @@ namespace Diary.DataAccess
         {
             string query = $"SELECT *  from dbo.Type_job";
 
-            return LoadData(query);
+            SqlConnection connection = new SqlConnection(connectionString);
+            SqlCommand command = new SqlCommand(query, connection);
+
+
+            return LoadData(query, connection, command);
         }
 
         public TypeJob GetTypeJob(int idTypeJob)
         {
             string query = $"SELECT *  from dbo.Type_job WHERE Id_type_job=@Id_type_job";
 
-            return LoadData(query, idTypeJob)[0];
+            SqlConnection connection = new SqlConnection(connectionString);
+            SqlCommand command = new SqlCommand(query, connection);
+
+            command.Parameters.AddWithValue("@Id_type_job", idTypeJob);
+
+            return LoadData(query, connection, command)[0];
         }
         #endregion // Public methods
 
         #region Private methods
 
-        void CheckConnect(string connectionString)
+        bool CheckConnect(string connectionString)
         {
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            try
             {
-                connection.Open();
-                connection.Close();
-            }
-        }
-
-        List<TypeJob> LoadData(string query)
-        {
-
-            List<TypeJob> loadList = new List<TypeJob>();
-
-            using (SqlConnection connection =
-               new SqlConnection(connectionString))
-            {
-                SqlCommand command = new SqlCommand(query, connection);
-                
-                connection.Open();
-                SqlDataReader reader = command.ExecuteReader();
-
-                while (reader.Read())
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    loadList.Add(
-                        new TypeJob(
-                                idTypeJob: (int)reader[0],
-                                nameTypeJob: (string)reader[1]
-                            )
-                        );
+                    connection.Open();
                 }
-                reader.Close();
+            }
+            catch
+            {
+                return false;
             }
 
-            return loadList;
+            return true;
         }
-        List<TypeJob> LoadData(string query, int idTypeJob)
+
+        List<TypeJob> LoadData(string query, SqlConnection connection, SqlCommand command)
         {
 
             List<TypeJob> loadList = new List<TypeJob>();
 
-            using (SqlConnection connection =
-               new SqlConnection(connectionString))
+            using (connection)
             {
-                SqlCommand command = new SqlCommand(query, connection);
-                command.Parameters.AddWithValue("@Id_type_job", idTypeJob);
-
+                
                 connection.Open();
                 SqlDataReader reader = command.ExecuteReader();
 

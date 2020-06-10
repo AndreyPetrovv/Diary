@@ -19,15 +19,13 @@ namespace Diary.DataAccess
 
         public RelevanceRepository(string connectionString)
         {
-            try
+            if (!CheckConnect(connectionString))
             {
-                CheckConnect(connectionString);
-                this.connectionString = connectionString;
+                throw new Exception();
+
             }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+
+            this.connectionString = connectionString;
         }
 
         #endregion // Constructor
@@ -38,38 +36,51 @@ namespace Diary.DataAccess
         {
             string query = "SELECT *  from dbo.Relevance";
 
-            return LoadData(query);
+            SqlConnection connection = new SqlConnection(connectionString);
+            SqlCommand command = new SqlCommand(query, connection);
+
+            return LoadData(query, connection, command);
         }
 
         public Relevance GetdRelevance(int idRelevance)
         {
             string query = $"SELECT *  from dbo.Relevance WHERE Id_relevance=@Id_relevance";
 
-            return LoadData(query, idRelevance)[0];
+            SqlConnection connection = new SqlConnection(connectionString);
+            SqlCommand command = new SqlCommand(query, connection);
+
+            command.Parameters.AddWithValue("@Id_relevance", idRelevance);
+
+            return LoadData(query, connection, command)[0];
         }
 
         #endregion // Public methods
 
         #region Private methods
 
-        void CheckConnect(string connectionString)
+        bool CheckConnect(string connectionString)
         {
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            try
             {
-                connection.Open();
-                connection.Close();
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+                }
             }
+            catch
+            {
+                return false;
+            }
+
+            return true;
         }
-        List<Relevance> LoadData(string query)
+        List<Relevance> LoadData(string query, SqlConnection connection, SqlCommand command)
         {
 
             List<Relevance> loadList = new List<Relevance>();
 
-            using (SqlConnection connection =
-               new SqlConnection(connectionString))
+            using (connection)
             {
-                SqlCommand command = new SqlCommand(query, connection);
-
                 connection.Open();
                 SqlDataReader reader = command.ExecuteReader();
 
@@ -87,34 +98,7 @@ namespace Diary.DataAccess
 
             return loadList;
         }
-        List<Relevance> LoadData(string query, int idRelevance)
-        {
 
-            List<Relevance> loadList = new List<Relevance>();
-
-            using (SqlConnection connection =
-               new SqlConnection(connectionString))
-            {
-                SqlCommand command = new SqlCommand(query, connection);
-                command.Parameters.AddWithValue("@Id_relevance", idRelevance);
-
-                connection.Open();
-                SqlDataReader reader = command.ExecuteReader();
-
-                while (reader.Read())
-                {
-                    loadList.Add(
-                        new Relevance(
-                                idRelevance: (int)reader[0],
-                                levelRelevance: (string)reader[1]
-                            )
-                        );
-                }
-                reader.Close();
-            }
-
-            return loadList;
-        }
         #endregion // Private methods
     }
 }

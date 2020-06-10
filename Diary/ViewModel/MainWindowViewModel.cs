@@ -117,20 +117,20 @@ namespace Diary.ViewModel
 
         void SetStaticInfoViewOnWorkspace(string key)
         {
-            StaticInfoViewModel workspace = null;
+            StatisticInfoViewModel workspace = null;
             DateTime dateBegin;
             switch (key)
             {
                 case "AllTime":
-                    workspace = new StaticInfoViewModel(noteRepository.GetAllNotes());
+                    workspace = new StatisticInfoViewModel(noteRepository.GetAllNotes());
                     break;
                 case "LastMonth":
                     dateBegin = DateTime.Now.AddDays(-30);
-                    workspace = new StaticInfoViewModel(noteRepository.GetNotesOfDays(dateBegin, DateTime.Now));
+                    workspace = new StatisticInfoViewModel(noteRepository.GetNotesOfDays(dateBegin, DateTime.Now));
                     break;
                 case "LastWeek":
                     dateBegin = DateTime.Now.AddDays(-7);
-                    workspace = new StaticInfoViewModel(noteRepository.GetNotesOfDays(dateBegin, DateTime.Now));
+                    workspace = new StatisticInfoViewModel(noteRepository.GetNotesOfDays(dateBegin, DateTime.Now));
                     break;
             }
 

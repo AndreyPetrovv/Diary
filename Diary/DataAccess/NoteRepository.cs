@@ -20,17 +20,13 @@ namespace Diary.DataAccess
 
         public NoteRepository(string connectionString)
         {
-            try
+            if(!CheckConnect(connectionString))
             {
-
-                CheckConnect(connectionString);
-                this.connectionString = connectionString;
+                throw new  Exception();
 
             }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+
+            this.connectionString = connectionString;
         }
 
         #endregion // Constructor
@@ -42,7 +38,13 @@ namespace Diary.DataAccess
             if (date != null)
             {
                 string query = $"SELECT * from dbo.Note WHERE Note_date=@Note_date";
-                return LoadData(query, date);
+
+                SqlConnection connection = new SqlConnection(connectionString);
+                SqlCommand command = new SqlCommand(query, connection);
+
+                command.Parameters.AddWithValue("@Note_date", date.ToShortDateString());
+
+                return LoadData(query, connection, command);
             }
             else
             {
@@ -56,7 +58,14 @@ namespace Diary.DataAccess
             {
                 string query = $"SELECT * from dbo.Note WHERE Note_date >= @Note_dateBegin" +
                     $" and Note_date <= @Note_dateEnd";
-                return LoadData(query, dateBegin, dateEnd);
+
+                SqlConnection connection = new SqlConnection(connectionString);
+                SqlCommand command = new SqlCommand(query, connection);
+
+                command.Parameters.AddWithValue("@Note_dateBegin", dateBegin.ToShortDateString());
+                command.Parameters.AddWithValue("@Note_dateEnd", dateEnd.ToShortDateString());
+
+                return LoadData(query, connection, command);
             }
             else
             {
@@ -68,19 +77,26 @@ namespace Diary.DataAccess
         public List<Note> GetAllNotes()
         {
             string query = $"SELECT * from dbo.Note";
-            return LoadData(query);
+
+            SqlConnection connection = new SqlConnection(connectionString);
+            SqlCommand command = new SqlCommand(query, connection);
+
+            return LoadData(query, connection, command);
         }
 
         public async void AddNoteAsync(Note note)
         {
             if (note != null)
             {
-                int idNewNote = GetCountNotes() + 1;
+                note.IdNote = GetCountNotes() + 1;
 
                 string query = $"Insert Into dbo.Note (Id_note, Note_date, Id_type_job, Id_relevance, Id_progress, Time_start, Time_finish)" +
                     $" values (@Id_note, @Note_date, @Id_type_job, @Id_relevance, @Id_progress, @Time_start, @Time_finish)";
 
-                await Task.Run(() => DumpData(query, note, idNewNote));
+                SqlConnection connection = new SqlConnection(connectionString);
+                SqlCommand command = GetAddUpdateNoteSqlCommand(query, connection, note);
+
+                await Task.Run(() => DumpData(query, connection, command));
             }
             else
             {
@@ -91,13 +107,15 @@ namespace Diary.DataAccess
         {
             if (note != null)
             {
-                int idNewNote = GetCountNotes() + 1;
+                note.IdNote = GetCountNotes() + 1;
 
                 string query = $"Insert Into dbo.Note (Id_note, Note_date, Id_type_job, Id_relevance, Id_progress, Time_start, Time_finish)" +
                     $" values (@Id_note, @Note_date, @Id_type_job, @Id_relevance, @Id_progress, @Time_start, @Time_finish)";
 
+                SqlConnection connection = new SqlConnection(connectionString);
+                SqlCommand command = GetAddUpdateNoteSqlCommand(query, connection, note);
 
-                DumpData(query, note, idNewNote);
+                DumpData(query, connection, command);
             }
             else
             {
@@ -114,7 +132,10 @@ namespace Diary.DataAccess
                     $" Id_progress=@Id_progress, Time_start=@Time_start, Time_finish=@Time_finish" +
                     $" WHERE Id_note=@Id_note";
 
-               DumpData(query, note, note.IdNote);
+                SqlConnection connection = new SqlConnection(connectionString);
+                SqlCommand command = GetAddUpdateNoteSqlCommand(query, connection, note);
+
+                DumpData(query, connection, command);
             }
             else
             {
@@ -128,7 +149,12 @@ namespace Diary.DataAccess
             {
                 string query = $"DELETE from dbo.Note WHERE Id_note=@Id_note";
 
-                DumpData(query, note.IdNote);
+                SqlConnection connection = new SqlConnection(connectionString);
+                SqlCommand command = new SqlCommand(query, connection);
+
+                command.Parameters.AddWithValue("@Id_note", note.IdNote);
+
+                DumpData(query, connection, command);
             }
             else
             {
@@ -141,7 +167,12 @@ namespace Diary.DataAccess
             {
                 string query = $"DELETE from dbo.Note WHERE Note_date=@Note_date";
 
-                DumpData(query, date);
+                SqlConnection connection = new SqlConnection(connectionString);
+                SqlCommand command = new SqlCommand(query, connection);
+
+                command.Parameters.AddWithValue("@Note_date", date.ToShortDateString());
+
+                DumpData(query, connection, command);
             }
             else
             {
@@ -153,17 +184,42 @@ namespace Diary.DataAccess
 
         #region Private methods
 
-        void CheckConnect(string connectionString)
+        SqlCommand GetAddUpdateNoteSqlCommand(string query, SqlConnection connection, Note note)
         {
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            SqlCommand command = new SqlCommand(query, connection);
+
+            command.Parameters.AddWithValue("@Id_note", note.IdNote);
+            command.Parameters.AddWithValue("@Note_date", note.NoteDate.ToShortDateString());
+            command.Parameters.AddWithValue("@Id_type_job", note.TypeJob.IdTypeJob);
+            command.Parameters.AddWithValue("@Id_relevance", note.Relevance.IdRelevance);
+            command.Parameters.AddWithValue("@Id_progress", note.Progress.IdProgress);
+            command.Parameters.AddWithValue("@Time_start", note.TimeStart);
+            command.Parameters.AddWithValue("@Time_finish", note.TimeFinish);
+
+            return command;
+        }
+
+        bool CheckConnect(string connectionString)
+        {
+            try
             {
-                connection.Open();
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+                }
             }
+            catch
+            {
+                return false;
+            }
+
+            return true;
         }
 
         int GetCountNotes()
         {
             int count = 0;
+
             using (SqlConnection connection =
                            new SqlConnection(connectionString))
             {
@@ -184,48 +240,12 @@ namespace Diary.DataAccess
             return count;
         }
 
-        List<Note> LoadData(string query)
+        List<Note> LoadData(string query, SqlConnection connection, SqlCommand command)
         {
             List<Note> loadList = new List<Note>();
 
-            using (SqlConnection connection =
-               new SqlConnection(connectionString))
+            using ( connection )
             {
-                SqlCommand command = new SqlCommand(query, connection);
-
-                connection.Open();
-                SqlDataReader reader = command.ExecuteReader();
-
-                while (reader.Read())
-                {
-                    loadList.Add(
-                        new Note(
-                                idNote: (int)reader[0],
-                                noteData: (DateTime)reader[1],
-                                typeJob: new TypeJobRepository(connectionString).GetTypeJob((int)reader[2]),
-                                relevance: new RelevanceRepository(connectionString).GetdRelevance((int)reader[3]),
-                                progress: new ProgressRepository(connectionString).GetProgress((int)reader[4]),
-                                timeStart: (TimeSpan)reader[5],
-                                timeFinish: (TimeSpan)reader[6]
-                            )
-                        );
-                }
-                reader.Close();
-            }
-
-            return loadList;
-        }
-        List<Note> LoadData(string query, DateTime date)
-        {
-            List<Note> loadList = new List<Note>();
-
-            using (SqlConnection connection =
-               new SqlConnection(connectionString))
-            {
-                SqlCommand command = new SqlCommand(query, connection);
-                command.Parameters.AddWithValue("@Note_date", date.ToShortDateString());
-
-
                 connection.Open();
                 SqlDataReader reader = command.ExecuteReader();
 
@@ -248,78 +268,11 @@ namespace Diary.DataAccess
 
             return loadList;
         }
-        List<Note> LoadData(string query, DateTime dateBegin, DateTime dateEnd)
+     
+        void DumpData(string query, SqlConnection connection, SqlCommand command)
         {
-            List<Note> loadList = new List<Note>();
-
-            using (SqlConnection connection =
-               new SqlConnection(connectionString))
+            using (connection)
             {
-                SqlCommand command = new SqlCommand(query, connection);
-                command.Parameters.AddWithValue("@Note_dateBegin", dateBegin.ToShortDateString());
-                command.Parameters.AddWithValue("@Note_dateEnd", dateEnd.ToShortDateString());
-
-                connection.Open();
-                SqlDataReader reader = command.ExecuteReader();
-
-                while (reader.Read())
-                {
-                    loadList.Add(
-                        new Note(
-                                idNote: (int)reader[0],
-                                noteData: (DateTime)reader[1],
-                                typeJob: new TypeJobRepository(connectionString).GetTypeJob((int)reader[2]),
-                                relevance: new RelevanceRepository(connectionString).GetdRelevance((int)reader[3]),
-                                progress: new ProgressRepository(connectionString).GetProgress((int)reader[4]),
-                                timeStart: (TimeSpan)reader[5],
-                                timeFinish: (TimeSpan)reader[6]
-                            )
-                        );
-                }
-                reader.Close();
-            }
-
-            return loadList;
-        }
-
-        void DumpData(string query, int idNote)
-        {
-            using (SqlConnection connection =
-               new SqlConnection(connectionString))
-            {
-                SqlCommand command = new SqlCommand(query, connection);
-                command.Parameters.AddWithValue("@Id_note", idNote);
-
-                connection.Open();
-                command.ExecuteNonQuery();
-            }
-        }
-        void DumpData(string query, DateTime date)
-        {
-            using (SqlConnection connection =
-               new SqlConnection(connectionString))
-            {
-                SqlCommand command = new SqlCommand(query, connection);
-                command.Parameters.AddWithValue("@Note_date", date.ToShortDateString());
-
-                connection.Open();
-                command.ExecuteNonQuery();
-            }
-        }
-        void DumpData(string query, Note note, int idNote)
-        {
-            using (SqlConnection connection =
-               new SqlConnection(connectionString))
-            {
-                SqlCommand command = new SqlCommand(query, connection);
-                command.Parameters.AddWithValue("@Id_note", idNote);
-                command.Parameters.AddWithValue("@Note_date", note.NoteDate.ToShortDateString());
-                command.Parameters.AddWithValue("@Id_type_job", note.TypeJob.IdTypeJob);
-                command.Parameters.AddWithValue("@Id_relevance", note.Relevance.IdRelevance);
-                command.Parameters.AddWithValue("@Id_progress", note.Progress.IdProgress);
-                command.Parameters.AddWithValue("@Time_start", note.TimeStart);
-                command.Parameters.AddWithValue("@Time_finish", note.TimeFinish);
-
                 connection.Open();
                 command.ExecuteNonQuery();
             }

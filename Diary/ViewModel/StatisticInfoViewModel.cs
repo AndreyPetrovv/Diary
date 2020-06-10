@@ -7,7 +7,7 @@ using Diary.Model;
 
 namespace Diary.ViewModel
 {
-    public class StaticInfoViewModel: BaseViewModel
+    public class StatisticInfoViewModel: BaseViewModel
     {
 
         #region Fields
@@ -30,7 +30,7 @@ namespace Diary.ViewModel
 
         #region Constructor
 
-        public StaticInfoViewModel(List<Note> notes)
+        public StatisticInfoViewModel(List<Note> notes)
         {
             this.notes = notes;
 
